@@ -1,0 +1,51 @@
+{
+  "name": "iot_gl_app",
+  "version": "1.0.0",
+  "description": "IOT_GL_APP",
+  "author": "IoTicos.org",
+  "scripts": {
+    "dev": "nuxt",
+    "devn": "nodemon api/index.js --exec babel-node",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "start": "nuxt start"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/pwa": "^3.2.2",
+    "bcrypt": "^5.0.0",
+    "bootstrap": "4.3.1",
+    "chart.js": "^2.7.1",
+    "colors": "^1.4.0",
+    "cookieparser": "^0.1.0",
+    "core-js": "^3.7.0",
+    "cors": "^2.8.5",
+    "d3": "^5.7.0",
+    "element-ui": "^2.14.1",
+    "es6-promise": "^4.1.1",
+    "express": "^4.17.1",
+    "fuse.js": "^3.2.0",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.15",
+    "mongoose-unique-validator": "^2.0.3",
+    "morgan": "^1.10.0",
+    "mqtt": "^4.2.5",
+    "nuxt": "^2.14.7",
+    "nuxt-highcharts": "^1.0.3",
+    "perfect-scrollbar": "^1.3.0",
+    "register-service-worker": "^1.5.2",
+    "tween.js": "^16.6.0",
+    "vue-chartjs": "^3.4.0",
+    "vue2-transitions": "^0.2.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "babel-plugin-component": "^1.1.1",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.3.1"
+  }
+}
