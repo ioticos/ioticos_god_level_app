@@ -1,0 +1,60 @@
+@import "../../variables";
+
+// Element UI override
+
+.el-table table {
+  @extend .table;
+}
+
+// A bit hacky but overrides some element ui defaults so it looks better
+.el-table::before {
+  height: 0 !important;
+}
+
+.el-table table td, .el-table table th.is-leaf {
+  border-bottom: none;
+}
+
+.el-table.el-table--enable-row-hover table.el-table__body tr:hover > td {
+  background: inherit;
+}
+
+.el-table table .ascending .sort-caret.ascending {
+  border-bottom-color: $primary;
+}
+
+.el-table table .descending .sort-caret.descending {
+  border-top-color: $primary;
+}
+
+.el-table {
+  .td-total {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-lg;
+    padding-top: 20px;
+    text-align: right;
+  }
+  .td-price {
+    font-size: 26px;
+    font-weight: $font-weight-light;
+    margin-top: 5px;
+    position: relative;
+    top: 4px;
+    text-align: right;
+  }
+
+  .table-actions {
+    .btn {
+      margin-right: 5px;
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+div.el-table,
+.el-table table tr,
+.el-table table thead th {
+  background-color: transparent;
+}

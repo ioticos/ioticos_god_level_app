@@ -1,0 +1,166 @@
+$box-shadow-lg: 0px 10px 50px 0px rgba(0, 0, 0, 0.2);
+
+.picker-card-styles {
+  box-shadow: $box-shadow-lg;
+  border: none;
+  border-radius: $border-radius-sm;
+}
+
+.el-picker-panel.time-select.el-popper {
+  @extend .picker-card-styles;
+}
+
+.el-picker-panel.el-date-picker {
+  width: 300px;
+  border: 0;
+  @extend .picker-card-styles;
+  .el-date-picker__header,
+  .el-picker-panel__content {
+    margin: 5px;
+  }
+}
+
+.el-date-picker__header,
+.el-date-range-picker__header {
+  &.el-date-picker__header--bordered {
+    border: none;
+  }
+
+  .el-picker-panel__icon-btn {
+    margin-top: 0;
+    height: 27px;
+    width: 27px;
+    color: $primary;
+
+    &:hover {
+      border-radius: 50%;
+      background-color: #eee;
+    }
+  }
+  .el-date-picker__header-label, div {
+    font-size: $font-size-base;
+    font-weight: $font-weight-light;
+    color: $primary;
+    &:hover {
+      background-color: #eee;
+      color: $primary;
+      border-radius: $border-radius-lg;
+    }
+  }
+}
+
+.el-date-picker,
+.time-select{
+
+  .time-select-item.selected:not(.disabled) {
+    color: $primary;
+  }
+  .el-picker-panel__content {
+    .el-date-table th {
+      color: $primary;
+      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+      font-size: $font-size-base;
+      font-weight: $font-weight-light;
+      border: none;
+    }
+  }
+
+  .el-picker-panel__content .el-date-table td,
+  .el-picker-panel__content .el-month-table td,
+  .el-picker-panel__content .el-year-table td {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+
+    div {
+      &:hover {
+        color: $default;
+      }
+      height: 100%;
+      padding: 0;
+    }
+    .cell,
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: $font-size-base;
+      color: $default;
+
+      &:hover {
+        border-radius: 50%;
+        background: #eee;
+        cursor: pointer;
+        color: $default;
+      }
+    }
+
+    &.current span,
+    &.current a.cell {
+      background-color: $primary;
+      color: $white;
+      box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+    }
+    span {
+      width: 32px;
+      height: 32px;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+.el-date-picker .el-date-picker__time-header {
+  border: none;
+}
+
+.el-date-picker .el-time-panel.el-popper {
+  @extend .picker-card-styles;
+  button {
+    @extend .btn-primary, .btn-round, .btn-sm;
+    border: 0;
+    padding: 7px !important;
+    margin: 0 5px 0 0;
+    line-height: 14px;
+    font-weight: $font-weight-normal;
+    &:first-child {
+      @extend .btn-danger;
+    }
+  }
+}
+
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+  width: 100% !important;
+}
+
+.el-date-editor.el-input .el-input__inner {
+  padding-left: 30px !important
+}
+
+.el-date-picker .el-input {
+  .el-input__inner {
+    @extend .form-control;
+    color: $default;
+    &:hover {
+      color: $default;
+    }
+  }
+}
+
+.el-date-picker .el-picker-panel__footer {
+  border: none;
+  .el-button {
+    @extend .btn-primary, .btn-round, .btn-sm;
+    border: 0;
+    &:first-child {
+      @extend .btn-info;
+    }
+  }
+}
+
+.el-picker-panel .el-time-spinner.has-seconds .el-time-spinner__wrapper:nth-child(2) {
+  margin-left: 0;
+}

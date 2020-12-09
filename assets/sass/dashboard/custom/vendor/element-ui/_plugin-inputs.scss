@@ -1,0 +1,34 @@
+@import "../../variables";
+
+.form-group {
+  .el-date-editor {
+    width: 100% !important;
+  }
+  .el-input__inner {
+    @extend .form-control;
+    width: 100%;
+  }
+  .el-select{
+    width: 100%;
+    .el-input__inner{
+      cursor: pointer !important;
+    }
+  }
+  .el-input-number{
+    width: 100%;
+    .plus-button{
+      @extend .btn-round, .btn-primary;
+      padding: 0 !important;
+      border: 0;
+    }
+    .el-input-number__decrease{
+      @extend .plus-button;
+      border-radius: $btn-round-radius 0 0 $btn-round-radius !important;
+    }
+    .el-input-number__increase{
+      @extend .plus-button;
+      border-radius: 0 $btn-round-radius $btn-round-radius 0 !important;
+    }
+  }
+}
+
