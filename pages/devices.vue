@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <!-- FORM ADD DEVICE -->
     <div class="row">
       <card>
@@ -123,6 +124,9 @@
         </el-table>
       </card>
     </div>
+
+<Json :value="devices"></Json>
+    
   </div>
 </template>
 
@@ -145,7 +149,8 @@ export default {
           dId: "8888",
           templateName: "Power Sensor",
           templateId: "984237562348756ldksjfh",
-          saverRule: false
+          saverRule: false,
+          count: 100
         },
         {
           name: "Office",

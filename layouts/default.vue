@@ -49,7 +49,7 @@
 
 
       </template>
-    </side-bar>
+    </side-bar> 
 
         <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
         <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
