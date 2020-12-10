@@ -91,8 +91,13 @@
           ></el-table-column>
 
           <el-table-column label="Actions">
-            <div slot-scope="{ row, $index }">
 
+            <div slot-scope="{ row, $index }">
+                {{row.saverRule}}
+            <el-tooltip content="Database Saver">
+                
+                <base-switch @click="updateSaverRuleStatus($index)" :value="row.saverRule" type="primary" on-text="On" off-text="Off"></base-switch>
+            </el-tooltip>
 
               <el-tooltip
                 content="Delete"
@@ -110,8 +115,11 @@
                   <i class="tim-icons icon-simple-remove "></i>
                 </base-button>
               </el-tooltip>
+
             </div>
+
           </el-table-column>
+
         </el-table>
       </card>
     </div>
@@ -136,19 +144,23 @@ export default {
           name: "Home",
           dId: "8888",
           templateName: "Power Sensor",
-          templateId: "984237562348756ldksjfh"
+          templateId: "984237562348756ldksjfh",
+          saverRule: false
         },
         {
           name: "Office",
           dId: "1111",
           templateName: "Power Sensor",
-          templateId: "984237562348756ldksjfh"
+          templateId: "984237562348756ldksjfh",
+          saverRule: true
+
         },
         {
           name: "Farm",
           dId: "99999",
           templateName: "Power Sensor",
-          templateId: "984237562348756ldksjfh"
+          templateId: "984237562348756ldksjfh",
+          saverRule: true
         }
       ]
     };
@@ -156,6 +168,10 @@ export default {
   methods: {
     deleteDevice(device) {
       alert("DELETING " + device.name);
+    },
+    updateSaverRuleStatus(index){
+        console.log(index)
+        this.devices[index].saverRule = !this.devices[index].saverRule;
     }
   }
 };
