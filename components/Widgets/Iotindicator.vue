@@ -16,30 +16,18 @@
 
 <script>
 export default {
-  //props: ['config'],
+  props: ['config'],
   data() {
     return {
-      value: TextTrackCueList,
-      config: {
-        userId: "userid",
-        selectedDevice: {
-          name: "Home",
-          dId: "8888",
-          templateName: "Power Sensor",
-          templateId: "984237562348756ldksjfh",
-          saverRule: false
-        },
-        variableFullName: "Pump",
-        variable: "uniquestr",
-        icon: "fa-sun",
-        column: "col-6",
-        widget: "indicator",
-        class: "success"
-      }
+      value: false
+
     };
   },
   mounted(){
-    this.$nuxt.$on('widget-topic', this.processReceivedData)
+      //userId/dId/uniquestr/sdata
+    const topic = this.config.userId + "/" + this.config.selectedDevice.dId + "/" + this.config.variable + "/sdata";
+    console.log(topic);
+    this.$nuxt.$on(topic, this.processReceivedData)
   },
   methods: {
 
@@ -71,5 +59,5 @@ export default {
   }
 };
 
-//userId/dId/uniquestr/sdata
+
 </script>
