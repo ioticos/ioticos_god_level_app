@@ -286,28 +286,28 @@
             <!-- FORM BUTTON TYPE -->
             <div v-if="widgetType == 'button'">
               <base-input
-                v-model="iotButtonConfig.variableFullName"
+                v-model="configButton.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotButtonConfig.message"
+                v-model="configButton.message"
                 label="Message to send"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotButtonConfig.text"
+                v-model="configButton.text"
                 label="Button Text"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotButtonConfig.icon"
+                v-model="configButton.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -315,7 +315,7 @@
               <br />
 
               <el-select
-                v-model="iotButtonConfig.class"
+                v-model="configButton.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -345,7 +345,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="iotButtonConfig.column"
+                v-model="configButton.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -526,7 +526,7 @@
             ></Iotswitch>
             <Iotbutton
               v-if="widgetType == 'button'"
-              :config="iotButtonConfig"
+              :config="configButton"
             ></Iotbutton>
             <Iotindicator
               v-if="widgetType == 'indicator'"
@@ -738,7 +738,7 @@ export default {
         column: "col-6"
       },
 
-      iotButtonConfig: {
+      configButton: {
         userId: "userid",
         selectedDevice: {
           name: "Home",
@@ -767,8 +767,6 @@ export default {
         column: "col-6"
       },
 
-      value: false,
-
       configButton: {
         userId: "userid",
         selectedDevice: {
@@ -781,7 +779,7 @@ export default {
         variableFullName: "Pump",
         variable: "var1",
         icon: "fa-sun",
-        column: "col-6",
+        column: "col-4",
         widget: "indicator",
         class: "danger",
         message: "{'fanstatus': 'stop'}"
@@ -807,12 +805,38 @@ export default {
   },
 
   methods: {
-    sendData1() {
-      this.value = !this.value;
-      const toSend = {
-        value: this.value
-      };
-      this.$nuxt.$emit("userid/8888/var1/sdata", toSend);
+    addNewWidget() {
+      if (this.widgetType == "numberchart") {
+        this.ncConfig.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.ncConfig)));
+      }
+
+      if (this.widgetType == "switch") {
+        this.iotSwitchConfig.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.iotSwitchConfig)));
+      }
+
+      if (this.widgetType == "button") {
+        this.configButton.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configButton)));
+      }
+
+      if (this.widgetType == "indicator") {
+        this.configIndicator.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configIndicator)));
+      }
+    },
+    makeid(length) {
+      var result = "";
+      var characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var charactersLength = characters.length;
+      for (var i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+      return result;
     }
   }
 };
