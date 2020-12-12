@@ -29,6 +29,9 @@ export default {
     console.log(topic);
     this.$nuxt.$on(topic, this.processReceivedData)
   },
+  beforeDestroy(){
+    this.$nuxt.$off(this.config.userId + "/" + this.config.selectedDevice.dId + "/" + this.config.variable + "/sdata")
+  },
   methods: {
 
     processReceivedData(data){

@@ -4,6 +4,11 @@
    
     <Iotbutton :config="configButton"></Iotbutton>
 
+    <Iotindicator :config="configIndicator"></Iotindicator>
+
+
+    <button @click="sendData1()">SEND</button>
+
   </div>
 </template>
 
@@ -12,6 +17,8 @@ export default {
   data() {
     return {
       value: false,
+
+      
 
       configButton:{
         userId: "userid",
@@ -54,6 +61,13 @@ export default {
 
   methods: {
 
+    sendData1() {
+      this.value = !this.value;
+      const toSend = {
+        value: this.value
+      };
+      this.$nuxt.$emit("userid/8888/var1/sdata", toSend);
+    },
 
 
   }
