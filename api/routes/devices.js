@@ -1,40 +1,22 @@
 const express = require("express");
 const router = express.Router();
 
+const { checkAuth } = require('../middlewares/authentication.js')
 
-router.get("/test", (req, res) => {
 
-  //console.log(req.query.dId);
+router.get("/device", checkAuth ,(req, res) => {
 
-  var toReturn = {
+  console.log(req.userData); 
+
+  req.userData.userId
+
+  const toSend = {
     status: "success",
-    data: "HELLO FROM GET"
-  }
+    data: "[2 , 3 , 4 , 5 ]"
+  };
 
-  res.json(toReturn);
+  return res.status(200).json(toSend);
 
-});
-
-
-router.post("/test", (req, res) => {
-
-  console.log(req.body);
-
-  var toReturn = {
-    status: "success",
-    data: "HELLO FRON POST"  
-  }
-
-  res.json(toReturn);
-
-});
-
-
-
-
-
-router.get("/device", (req, res) => {
-  
 });
 
 router.post("/device", (req, res) => {
