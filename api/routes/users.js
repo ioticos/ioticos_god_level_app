@@ -6,6 +6,19 @@ const bcrypt = require("bcrypt");
 //models import
 import User from "../models/user.js";
 
+
+//AUTH
+router.post("/register", (req, res) => {
+  
+});
+
+router.post("/login", (req, res) => {
+  
+});
+
+
+ 
+
 router.get("/new-user", async (req, res) => {
 
     try {

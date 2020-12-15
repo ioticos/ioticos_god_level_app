@@ -22,7 +22,6 @@ app.use(cors());
 app.use("/api", require("./routes/devices.js"));
 app.use("/api", require("./routes/users.js"));
 
-
 module.exports = app;
 
 //listener
@@ -57,25 +56,20 @@ const options = {
   authSource: "admin"
 };
 
-
-    mongoose.connect(uri, options)
-    .then(
-        () => {
-          console.log("\n");
-          console.log("*******************************".green);
-          console.log("✔ Mongo Successfully Connected!".green);
-          console.log("*******************************".green);
-          console.log("\n");
-        },
-        (err) => {
-          console.log("\n");
-          console.log("*******************************".red);
-          console.log("    Mongo Connection Failed    ".red);
-          console.log("*******************************".red);
-          console.log("\n");
-          console.log(err);
-        }
-      );
-
-
-
+mongoose.connect(uri, options).then(
+  () => {
+    console.log("\n");
+    console.log("*******************************".green);
+    console.log("✔ Mongo Successfully Connected!".green);
+    console.log("*******************************".green);
+    console.log("\n");
+  },
+  err => {
+    console.log("\n");
+    console.log("*******************************".red);
+    console.log("    Mongo Connection Failed    ".red);
+    console.log("*******************************".red);
+    console.log("\n");
+    console.log(err);
+  }
+);
