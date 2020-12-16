@@ -31,7 +31,49 @@ router.get("/device", checkAuth ,(req, res) => {
 
 });
 
-router.post("/device", (req, res) => {
+
+/* 
+{
+   "newDevice":{
+      "dId":"121212",
+      "name":"HOME",
+      "templateName":"esp32 template",
+      "templateId":"ababab"
+   }
+}
+*/
+
+router.post("/device", checkAuth , async (req, res) => {
+
+  try {
+    const userId = req.userData._id;
+    var newDevice = req.body.newDevice;
+  
+    newDevice.userId = userId;
+    newDevice.createdTime = Date.now();
+  
+    const device = await Device.create(newDevice);
+  
+    const toSend = {
+      status: "success"
+    }
+  
+    return res.json(toSend);
+
+  } catch (error) {
+    console.log("ERROR CREATING NEW DEVICE");
+    console.log(error);
+
+    const toSend = {
+      status: "error",
+      error: error
+    }
+  
+    return res.status(500).json(toSend);
+
+  }
+
+
   
 });
 
