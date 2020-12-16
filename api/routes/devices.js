@@ -86,13 +86,12 @@ router.delete("/device", checkAuth, async(req, res) => {
     const userId = req.userData._id;
     const dId = req.query.dId;
 
-    console.log(dId)
 
-    const device =  await Device.deleteOne({userId: userId, dId: dId});
+    const result = await Device.deleteOne({userId: userId, dId: dId});
   
     const toSend = {
       status: "success",
-      data: device
+      data: result
     };
   
     return res.json(toSend);
@@ -113,6 +112,7 @@ router.delete("/device", checkAuth, async(req, res) => {
 
 
 });
+
 
 //UPDATE DEVICE
 router.put("/device", (req, res) => {
