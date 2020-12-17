@@ -4,17 +4,17 @@
       <ul class="nav">
         <li class="nav-item">
           <a
-            href="http://creative-tim.com"
+            href="https://ioticos.org"
             target="_blank"
             rel="noopener"
             class="nav-link"
           >
-            Creative Tim
+            IoTicos.org
           </a>
         </li>
         <li class="nav-item">
           <a
-            href="https://www.creative-tim.com/presentation"
+            href="https://ioticos.org"
             target="_blank"
             rel="noopener"
             class="nav-link"
@@ -24,7 +24,7 @@
         </li>
         <li class="nav-item">
           <a
-            href="http://blog.creative-tim.com"
+            href="hhttps://ioticos.org"
             target="_blank"
             rel="noopener"
             class="nav-link"
@@ -40,7 +40,7 @@
           href="https://www.creative-tim.com/?ref=pdf-vuejs"
           target="_blank"
           rel="noopener"
-          >Creative Tim</a
+          >IoTicos</a
         >
         for a better web.
       </div>

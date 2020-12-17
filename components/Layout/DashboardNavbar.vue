@@ -20,6 +20,11 @@
     </div>
 
     <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
+
+
+      
+
+
       <div class="search-bar input-group" @click="searchModalVisible = true">
         <button
           class="btn btn-link"
