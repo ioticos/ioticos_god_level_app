@@ -64,6 +64,7 @@
 </template>
 <script>
 export default {
+  middleware: 'notAuthenticated',
   layout: "auth",
   data() {
     return {

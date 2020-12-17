@@ -57,6 +57,7 @@
 <script>
 const Cookie = process.client ? require("js-cookie") : undefined;
 export default {
+  middleware: 'notAuthenticated',
   name: "login-page",
   layout: "auth",
   data() {
