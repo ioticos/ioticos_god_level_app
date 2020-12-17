@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>
-            Alarms
+            Alarms 
         </h2>
     </div>
 </template>

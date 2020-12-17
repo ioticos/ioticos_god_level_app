@@ -4,7 +4,7 @@
       <card class="card-login card-white">
         <template slot="header">
           <img src="img//card-primary.png" alt="" />
-          <h1 class="card-title">IoT GL</h1>
+          <h1 class="card-title">IoT GL {{$store.state.auth}}  </h1>
         </template>
 
         <div>
@@ -32,7 +32,7 @@
             type="primary"
             class="mb-3"
             size="lg"
-            @click="login"
+            @click="login()"
             block
           >
             Login
@@ -66,6 +66,60 @@ export default {
         password: ""
       }
     };
+  },
+  mounted() {
+
+  },
+  methods: {
+    login() {
+      this.$axios
+        .post("/login", this.user)
+        .then(res => {
+
+          //success! - Usuario creado.
+          if (res.data.status == "success") {
+
+            this.$notify({
+              type: "success",
+              icon: "tim-icons icon-check-2",
+              message: "Success! Welcome " + res.data.userData.name
+            });
+
+            console.log(res.data)
+
+            const auth = {
+              token: res.data.token,
+              userData: res.data.userData
+            }
+
+            //token to de store - token a la tienda
+            this.$store.commit('setAuth', auth);
+
+            return;
+          }
+        })
+        .catch(e => {
+          console.log(e.response.data);
+
+          if (e.response.data.error.errors.email.kind == "unique") {
+            this.$notify({
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              message: "User already exists :("
+            });
+
+            return;
+          } else {
+            this.$notify({
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              message: "Error creating user..."
+            });
+
+            return;
+          }
+        });
+    }
   }
 };
 </script>
