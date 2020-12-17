@@ -4,7 +4,7 @@
       <card class="card-login card-white">
         <template slot="header">
           <img src="img//card-primary.png" alt="" />
-          <h1 class="card-title">IoT GL {{$store.state.auth}}  </h1>
+          <h1 class="card-title">IoT GL   </h1>
         </template>
 
         <div>
@@ -94,6 +94,11 @@ export default {
 
             //token to de store - token a la tienda
             this.$store.commit('setAuth', auth);
+
+            //set auth object in localStorage - Grabamos el token en localStorage
+            localStorage.setItem('auth', JSON.stringify(auth));
+
+            $nuxt.$router.push('/dashboard');
 
             return;
           }
