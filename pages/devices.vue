@@ -91,9 +91,17 @@
 
           <el-table-column label="Actions">
             <div slot-scope="{ row, $index }">
-
-              <el-tooltip content="Saver Status Indicator" style="margin-right:10px">
-                <i class="fas fa-database " :class="{'text-success' : row.saverRule, 'text-dark' : !row.saverRule}" ></i>
+              <el-tooltip
+                content="Saver Status Indicator"
+                style="margin-right:10px"
+              >
+                <i
+                  class="fas fa-database "
+                  :class="{
+                    'text-success': row.saverRule,
+                    'text-dark': !row.saverRule
+                  }"
+                ></i>
               </el-tooltip>
 
               <el-tooltip content="Database Saver">
@@ -122,7 +130,6 @@
                   <i class="tim-icons icon-simple-remove "></i>
                 </base-button>
               </el-tooltip>
-
             </div>
           </el-table-column>
         </el-table>
@@ -130,7 +137,6 @@
     </div>
 
     <Json :value="$store.state.devices"></Json>
-    
   </div>
 </template>
 
@@ -147,24 +153,40 @@ export default {
     [Select.name]: Select
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   mounted() {
     this.$store.dispatch("getDevices");
   },
   methods: {
 
+
     deleteDevice(device) {
-      alert("DELETING " + device.name);
+      const axiosHeader = {
+        headers: {
+          token: this.$store.state.auth.token
+        },
+        params: {
+          dId: device.dId
+        }
+      };
+
+      this.$axios.delete("/device", axiosHeader)
+      .then(res => {
+
+        this.$store.dispatch("getDevices");
+
+      })
+      .catch(e => {
+        console.log(e);
+        this.$notify({type: 'danger', icon: 'tim-icons icon-alert-circle-exc', message: ' Error deleting ' + device.name});
+      })
     },
 
     updateSaverRuleStatus(index) {
       console.log(index);
       this.devices[index].saverRule = !this.devices[index].saverRule;
     }
-
   }
 };
 </script>

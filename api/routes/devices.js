@@ -26,7 +26,7 @@ router.get("/device", checkAuth, async (req, res) => {
   try {
     const userId = req.userData._id;
     const devices = await Device.find({ userId: userId });
-
+ 
     const toSend = {
       status: "success",
       data: devices
