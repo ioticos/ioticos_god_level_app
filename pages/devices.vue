@@ -159,8 +159,6 @@ export default {
     this.$store.dispatch("getDevices");
   },
   methods: {
-
-
     deleteDevice(device) {
       const axiosHeader = {
         headers: {
@@ -171,16 +169,28 @@ export default {
         }
       };
 
-      this.$axios.delete("/device", axiosHeader)
-      .then(res => {
+      this.$axios
+        .delete("/device", axiosHeader)
+        .then(res => {
 
-        this.$store.dispatch("getDevices");
-
-      })
-      .catch(e => {
-        console.log(e);
-        this.$notify({type: 'danger', icon: 'tim-icons icon-alert-circle-exc', message: ' Error deleting ' + device.name});
-      })
+          if (res.data.status == "success") {
+            this.$notify({
+              type: "success",
+              icon: "tim-icons icon-check-2",
+              message: device.name + " deleted!"
+            });
+            this.$store.dispatch("getDevices");
+          }
+          
+        })
+        .catch(e => {
+          console.log(e);
+          this.$notify({
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: " Error deleting " + device.name
+          });
+        });
     },
 
     updateSaverRuleStatus(index) {
