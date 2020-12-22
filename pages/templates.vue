@@ -640,6 +640,7 @@
 
         <div class="row">
           <el-table :data="templates">
+            
             <el-table-column min-width="50" label="#" align="center">
               <div class="photo" slot-scope="{ row, $index }">
                 {{ $index + 1 }}
@@ -809,7 +810,40 @@ export default {
     };
   },
 
+  mounted() {
+    this.getTemplates();
+  },
+
   methods: {
+
+    //Get Templates
+    async getTemplates() {
+
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.token
+        }
+      };
+
+      try {
+        const res = await this.$axios.get("/template", axiosHeaders);
+        console.log(res.data);
+
+        if (res.data.status == "success") {
+          this.templates = res.data.data;
+        }
+      } catch (error) {
+        this.$notify({
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: "Error getting templates..."
+        });
+        console.log(error);
+        return;
+      }
+    },
+
+    //Save Template
     async saveTemplate() {
       const axiosHeaders = {
         headers: {
@@ -817,7 +851,7 @@ export default {
         }
       };
 
-      console.log(axiosHeaders)
+      console.log(axiosHeaders);
 
       const toSend = {
         template: {
@@ -826,10 +860,8 @@ export default {
           widgets: this.widgets
         }
       };
-      
 
       try {
-
         const res = await this.$axios.post("/template", toSend, axiosHeaders);
 
         if (res.data.status == "success") {
@@ -838,7 +870,7 @@ export default {
             icon: "tim-icons icon-alert-circle-exc",
             message: "Template created!"
           });
-          //this.getTemplates();
+          this.getTemplates();
         }
       } catch (error) {
         this.$notify({
@@ -851,6 +883,7 @@ export default {
       }
     },
 
+    //Add Widget
     addNewWidget() {
       if (this.widgetType == "numberchart") {
         this.ncConfig.variable = this.makeid(10);
@@ -872,9 +905,12 @@ export default {
         this.widgets.push(JSON.parse(JSON.stringify(this.configIndicator)));
       }
     },
+
+    //Delete Widget
     deleteWidget(index) {
       this.widgets.splice(index, 1);
     },
+
     makeid(length) {
       var result = "";
       var characters =
