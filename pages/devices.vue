@@ -159,6 +159,9 @@ export default {
     this.$store.dispatch("getDevices");
   },
   methods: {
+
+    
+
     deleteDevice(device) {
       const axiosHeader = {
         headers: {
