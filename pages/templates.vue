@@ -640,7 +640,6 @@
 
         <div class="row">
           <el-table :data="templates">
-            
             <el-table-column min-width="50" label="#" align="center">
               <div class="photo" slot-scope="{ row, $index }">
                 {{ $index + 1 }}
@@ -688,7 +687,7 @@
     </div>
 
     <!-- JSONS -->
-    <Json :value="widgets"></Json>
+    <Json :value="templates"></Json>
   </div>
 </template>
 
@@ -815,10 +814,8 @@ export default {
   },
 
   methods: {
-
     //Get Templates
     async getTemplates() {
-
       const axiosHeaders = {
         headers: {
           token: this.$store.state.auth.token
@@ -877,6 +874,45 @@ export default {
           type: "danger",
           icon: "tim-icons icon-alert-circle-exc",
           message: "Error creating template..."
+        });
+        console.log(error);
+        return;
+      }
+    },
+
+    //Delete Template
+    async deleteTemplate(template) {
+
+      
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.token
+        },
+        params:{
+          templateId:template._id
+        }
+      };
+
+      console.log(axiosHeaders);
+
+      try {
+
+        const res = await this.$axios.delete("/template", axiosHeaders);
+
+        if (res.data.status == "success") {
+          this.$notify({
+            type: "success",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: template.name + " was deleted!"
+          });
+          
+          this.getTemplates();
+        }
+      } catch (error) {
+        this.$notify({
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: "Error getting templates..."
         });
         console.log(error);
         return;
