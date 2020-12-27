@@ -4,6 +4,7 @@ const { checkAuth } = require("../middlewares/authentication.js");
 const axios = require("axios");
 
 import Device from "../models/device.js";
+import SaverRule from '../models/emqx_saver_rule.js';
 
 /* 
   ___  ______ _____ 
@@ -165,7 +166,8 @@ async function selectDevice(userId, dId) {
 //create saver rule
 async function createSaverRule(userId, dId, status) {
 
-  const url = "http://localhost:8085/api/v4/rules";
+  try {
+    const url = "http://localhost:8085/api/v4/rules";
 
   const topic = userId + "/" + dId + "/+/sdata";
 
@@ -191,8 +193,27 @@ async function createSaverRule(userId, dId, status) {
 
   if(res.status === 200 && res.data.data){
     console.log(res.data.data);
+
+    await SaverRule.create({
+      userId: userId,
+      dId: dId,
+      emqxRuleId: res.data.data.id,
+      status: status
+    });
+
+    return true;
+
+  }else{
+    return false;
   }
 
+  } catch (error) {
+    console.log("Error creating saver rule")
+    console.log(error);
+    return false;
+  }
+
+  
 
 }
 
