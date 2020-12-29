@@ -134,7 +134,7 @@
       </card>
     </div>
 
-    <Json :value="templates"></Json>
+    <Json :value="$store.state.devices"></Json>
   </div>
 </template>
 
@@ -167,6 +167,89 @@ export default {
     this.getTemplates();
   },
   methods: {
+    updateSaverRuleStatus(rule) {
+      var ruleCopy = JSON.parse(JSON.stringify(rule));
+
+      ruleCopy.status = !ruleCopy.status;
+
+      const toSend = { rule: ruleCopy };
+
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.accessToken
+        }
+      };
+
+      this.$axios
+        .put("/saver-rule", toSend, axiosHeaders)
+        .then(res => {
+          if (res.data.status == "error") {
+            this.$notify({
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              message: " Error updating Saver Status..."
+            });
+            return;
+          }
+
+          if (res.data.status == "success") {
+            this.$notify({
+              type: "success",
+              icon: "tim-icons icon-check-2",
+              message: " Device Saver Status Updated"
+            });
+          }
+
+          $nuxt.$emit("time-to-get-devices");
+
+          return;
+        })
+        .catch(e => {
+          console.log(e);
+          this.$notify({
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: " Error deleting " + device.name
+          });
+          return;
+        });
+    },
+
+    deleteDevice(device) {
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.accessToken
+        },
+        params: {
+          dId: device.dId
+        }
+      };
+
+      this.$axios
+        .delete("/device", axiosHeaders)
+        .then(res => {
+          if (res.data.status == "success") {
+            this.$notify({
+              type: "success",
+              icon: "tim-icons icon-check-2",
+              message: device.name + " deleted!"
+            });
+          }
+
+          $nuxt.$emit("time-to-get-devices");
+
+          return;
+        })
+        .catch(e => {
+          console.log(e);
+          this.$notify({
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: " Error deleting " + device.name
+          });
+          return;
+        });
+    },
     //new device
     createNewDevice() {
       if (this.newDevice.name == "") {
@@ -217,9 +300,7 @@ export default {
       this.$axios
         .post("/device", toSend, axiosHeaders)
         .then(res => {
-
           if (res.data.status == "success") {
-
             this.$store.dispatch("getDevices");
 
             this.newDevice.name = "";
@@ -236,7 +317,6 @@ export default {
           }
         })
         .catch(e => {
-
           if (
             e.response.data.status == "error" &&
             e.response.data.error.errors.dId.kind == "unique"
