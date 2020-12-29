@@ -57,9 +57,9 @@ router.post("/device", checkAuth, async (req, res) => {
 
     const device = await Device.create(newDevice);
 
-    createSaverRule(userId,newDevice.dId, true);
+    await createSaverRule(userId, newDevice.dId, true);
 
-    selectDevice(userId, newDevice.dId);
+    await selectDevice(userId, newDevice.dId);
 
     const toSend = {
       status: "success"
