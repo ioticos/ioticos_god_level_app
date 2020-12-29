@@ -96,16 +96,16 @@
                 <i
                   class="fas fa-database "
                   :class="{
-                    'text-success': row.saverRule,
-                    'text-dark': !row.saverRule
+                    'text-success': row.saverRule.status,
+                    'text-dark': !row.saverRule.status
                   }"
                 ></i>
               </el-tooltip>
 
               <el-tooltip content="Database Saver">
                 <base-switch
-                  @click="updateSaverRuleStatus($index)"
-                  :value="row.saverRule"
+                  @click="updateSaverRuleStatus(row.saverRule)"
+                  :value="row.saverRule.status"
                   type="primary"
                   on-text="On"
                   off-text="Off"
@@ -168,39 +168,37 @@ export default {
   },
   methods: {
     updateSaverRuleStatus(rule) {
+      
       var ruleCopy = JSON.parse(JSON.stringify(rule));
 
       ruleCopy.status = !ruleCopy.status;
 
-      const toSend = { rule: ruleCopy };
+      const toSend = { 
+        rule: ruleCopy 
+      };
 
       const axiosHeaders = {
         headers: {
-          token: this.$store.state.auth.accessToken
+          token: this.$store.state.auth.token
         }
       };
 
       this.$axios
         .put("/saver-rule", toSend, axiosHeaders)
         .then(res => {
-          if (res.data.status == "error") {
-            this.$notify({
-              type: "danger",
-              icon: "tim-icons icon-alert-circle-exc",
-              message: " Error updating Saver Status..."
-            });
-            return;
-          }
+
 
           if (res.data.status == "success") {
+
+            this.$store.dispatch("getDevices");
+
             this.$notify({
               type: "success",
               icon: "tim-icons icon-check-2",
               message: " Device Saver Status Updated"
             });
-          }
 
-          $nuxt.$emit("time-to-get-devices");
+          }
 
           return;
         })
@@ -209,7 +207,7 @@ export default {
           this.$notify({
             type: "danger",
             icon: "tim-icons icon-alert-circle-exc",
-            message: " Error deleting " + device.name
+            message: " Error updating saver rule status"
           });
           return;
         });
@@ -393,10 +391,6 @@ export default {
         });
     },
 
-    updateSaverRuleStatus(index) {
-      console.log(index);
-      this.devices[index].saverRule = !this.devices[index].saverRule;
-    }
   }
 };
 </script>
