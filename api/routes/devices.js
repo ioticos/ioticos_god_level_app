@@ -126,6 +126,7 @@ router.delete("/device", checkAuth, async (req, res) => {
 
 //UPDATE DEVICE (SELECTOR)
 router.put("/device", checkAuth, (req, res) => {
+  
   const dId = req.body.dId;
   const userId = req.userData._id;
 
