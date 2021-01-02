@@ -25,7 +25,6 @@ const auth = {
 //GET DEVICES
 router.get("/device", checkAuth, async (req, res) => {
   try {
-
     const userId = req.userData._id;
 
     //get devices
@@ -39,9 +38,10 @@ router.get("/device", checkAuth, async (req, res) => {
 
     //saver rules to -> devices
     devices.forEach((device, index) => {
-      devices[index].saverRule = saverRules.filter(saverRule => saverRule.dId == device.dId)[0];
+      devices[index].saverRule = saverRules.filter(
+        saverRule => saverRule.dId == device.dId
+      )[0];
     });
-
 
     const toSend = {
       status: "success",
@@ -68,11 +68,12 @@ router.post("/device", checkAuth, async (req, res) => {
     var newDevice = req.body.newDevice;
 
     newDevice.userId = userId;
+
     newDevice.createdTime = Date.now();
 
-    const device = await Device.create(newDevice);
-
     await createSaverRule(userId, newDevice.dId, true);
+
+    const device = await Device.create(newDevice);
 
     await selectDevice(userId, newDevice.dId);
 
@@ -103,8 +104,6 @@ router.delete("/device", checkAuth, async (req, res) => {
     await deleteSaverRule(dId);
 
     const result = await Device.deleteOne({ userId: userId, dId: dId });
-
-    
 
     const toSend = {
       status: "success",
@@ -146,22 +145,18 @@ router.put("/device", checkAuth, (req, res) => {
 });
 
 //SAVER-RULE STATUS UPDATER
-router.put('/saver-rule', checkAuth, async (req, res) => {
-
-  
+router.put("/saver-rule", checkAuth, async (req, res) => {
   const rule = req.body.rule;
 
-  console.log(rule)
+  console.log(rule);
 
-  await updateSaverRuleStatus(rule.emqxRuleId, rule.status)
+  await updateSaverRuleStatus(rule.emqxRuleId, rule.status);
 
   const toSend = {
     status: "success"
   };
 
   res.json(toSend);
-  
-
 });
 
 /* 
@@ -172,8 +167,6 @@ ______ _   _ _   _ _____ _____ _____ _____ _   _  _____
 | |   | |_| | |\  | \__/\ | |  _| |_\ \_/ / |\  |/\__/ /
 \_|    \___/\_| \_/\____/ \_/  \___/ \___/\_| \_/\____/  
 */
-
-
 
 async function selectDevice(userId, dId) {
   try {
@@ -210,9 +203,9 @@ async function getSaverRules(userId) {
 
 //create saver rule
 async function createSaverRule(userId, dId, status) {
-  console.log(userId)
+  console.log(userId);
   console.log(dId);
-  console.log(status)
+  console.log(status);
 
   try {
     const url = "http://localhost:8085/api/v4/rules";
@@ -243,10 +236,8 @@ async function createSaverRule(userId, dId, status) {
     //save rule in emqx - grabamos la regla en emqx
     const res = await axios.post(url, newRule, auth);
     console.log(res.data.data);
-    
-    if (res.status === 200 && res.data.data) {
-      
 
+    if (res.status === 200 && res.data.data) {
       await SaverRule.create({
         userId: userId,
         dId: dId,
@@ -267,28 +258,25 @@ async function createSaverRule(userId, dId, status) {
 
 //update saver rule
 async function updateSaverRuleStatus(emqxRuleId, status) {
-
   try {
     const url = "http://localhost:8085/api/v4/rules/" + emqxRuleId;
 
     const newRule = {
       enabled: status
     };
-  
+
     const res = await axios.put(url, newRule, auth);
-  
+
     if (res.status === 200 && res.data.data) {
       await SaverRule.updateOne({ emqxRuleId: emqxRuleId }, { status: status });
       console.log("Saver Rule Status Updated...".green);
       return true;
-    }else{
+    } else {
       return false;
     }
-
   } catch (error) {
     return false;
   }
-
 }
 
 //delete saver rule
