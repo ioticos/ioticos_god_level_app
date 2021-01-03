@@ -133,7 +133,10 @@ export default {
   mounted() {
     this.$store.dispatch("getDevices");
 
-    this.$nuxt.$on("selectedDeviceIndex", this.updateSelectedDeviceIndex)
+    this.$nuxt.$on("selectedDeviceIndex", this.updateSelectedDeviceIndex);
+  },
+  beforeDestroy(){
+    this.$nuxt.$off("selectedDeviceIndex");
   },
   methods: {
     updateSelectedDeviceIndex(index){
