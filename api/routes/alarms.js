@@ -4,6 +4,8 @@ const axios = require('axios');
 const { checkAuth } = require('../middlewares/authentication.js');
 const colors = require('colors');
 
+import AlarmRule from '../models/emqx_alarm_rule.js';
+
 const auth = {
     auth: {
         username: 'admin',
@@ -81,15 +83,18 @@ async function createAlarmRule(newAlarm) {
 
     //save rule in emqx - grabamos la regla en emqx
     const res = await axios.post(url, newRule, auth);
+    var emqxRuleId = res.data.data.id;
+
     console.log(res.data.data);
 
     if (res.data.data && res.status === 200) {
+
 
         //save rule in mongo -- grabamos regla en mongo
         const mongoRule = await AlarmRule.create({
             userId: newAlarm.userId,
             dId: newAlarm.dId,
-            emqxRuleId: res.data.data.id,
+            emqxRuleId: emqxRuleId,
             status: newAlarm.status,
             variable: newAlarm.variable,
             variableFullName: newAlarm.variableFullName,
