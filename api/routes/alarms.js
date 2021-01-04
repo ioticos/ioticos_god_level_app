@@ -48,6 +48,57 @@ router.post('/alarm-rule', checkAuth, async (req, res) => {
 
 });
 
+//UPDATE ALARM-RULE STATUS
+router.put('/alarm-rule', checkAuth, async (req, res) => {
+
+
+    var rule = req.body.rule;
+
+    var r = await updateAlarmRuleStatus(rule.emqxRuleId, rule.status);
+
+    if (r == true) {
+
+        const response = {
+            status: "success",
+        }
+
+        return res.json(response);
+
+    } else {
+        const response = {
+            status: "error",
+        }
+
+        return res.json(response);
+    }
+
+});
+
+//DELETE ALARM-RULE
+router.delete('/alarm-rule', checkAuth, async (req, res) => {
+
+    var emqxRuleId = req.query.emqxRuleId;
+
+    var r = await deleteAlarmRule(emqxRuleId);
+
+    if (r ) {
+
+        const response = {
+            status: "success",
+        }
+
+        return res.json(response);
+
+    } else {
+        const response = {
+            status: "error",
+        }
+
+        return res.json(response);
+    }
+
+});
+
 
 /* 
 ______ _   _ _   _ _____ _____ _____ _____ _   _  _____ 
@@ -118,6 +169,49 @@ async function createAlarmRule(newAlarm) {
     
     }
 
+}
+
+//UPDATE ALARM STATUS
+async function updateAlarmRuleStatus(emqxRuleId, status) {
+
+    const url = "http://localhost:8085/api/v4/rules/" + emqxRuleId;
+
+    const newRule = {
+        enabled: status
+    }
+
+    const res = await axios.put(url, newRule, auth);
+
+    if (res.data.data && res.status === 200) {
+
+        await AlarmRule.updateOne({ emqxRuleId: emqxRuleId }, { status: status });
+
+
+        console.log("Saver Rule Status Updated...".green);
+
+        return true;
+    }
+
+}
+
+//DELETE ONLY ONE RULE
+async function deleteAlarmRule(emqxRuleId) {
+    try {
+
+        const url = "http://localhost:8085/api/v4/rules/" + emqxRuleId;
+
+        const emqxRule = await axios.delete(url, auth);
+
+        const deleted = await AlarmRule.deleteOne({ emqxRuleId: emqxRuleId });
+
+        return true;
+
+    } catch (error) {
+
+        console.log(error);
+        return false;
+
+    }
 }
 
 module.exports = router;
