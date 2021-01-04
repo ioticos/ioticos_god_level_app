@@ -42,13 +42,12 @@ router.get("/device", checkAuth, async (req, res) => {
     //get templates
     const templates = await getTemplates(userId);
 
-    console.log(templates);
     
 
     //saver rules to -> devices
     devices.forEach((device, index) => {
       devices[index].saverRule = saverRules.filter(saverRule => saverRule.dId == device.dId)[0];
-      devices[index].template = templates.filter(template => template._id == device.templateId);
+      devices[index].template = templates.filter(template => template._id == device.templateId)[0];
     });
 
     const toSend = {
@@ -134,11 +133,11 @@ router.delete("/device", checkAuth, async (req, res) => {
 });
 
 //UPDATE DEVICE (SELECTOR)
-router.put("/device", checkAuth, (req, res) => {
+router.put("/device", checkAuth, async (req, res) => {
   const dId = req.body.dId;
   const userId = req.userData._id;
 
-  if (selectDevice(userId, dId)) {
+  if (await selectDevice(userId, dId)) {
     const toSend = {
       status: "success"
     };

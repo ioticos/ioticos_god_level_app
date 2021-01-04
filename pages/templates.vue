@@ -4,7 +4,7 @@
     <div class="row">
       <card>
         <div slot="header">
-          <h4 class="card-title">Widgets</h4>
+          <h4 class="card-title">Widgets {{iotIndicatorConfig.column}}</h4>
         </div>
 
         <div class="row">
@@ -688,7 +688,7 @@
     </div>
 
     <!-- JSONS -->
-    <Json :value="templates"></Json>
+    <Json :value="widgets"></Json>
   </div>
 </template>
 
@@ -938,8 +938,8 @@ export default {
       }
 
       if (this.widgetType == "indicator") {
-        this.configIndicator.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configIndicator)));
+        this.iotIndicatorConfig.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.iotIndicatorConfig)));
       }
     },
 
