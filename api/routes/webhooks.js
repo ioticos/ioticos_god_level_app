@@ -57,9 +57,23 @@ router.post("/alarm-webhook", async (req, res) => {
         
           const incomingAlarm = req.body;
           
-          console.log(incomingAlarm);
+          const lastNotif = await Notification.find({ dId: incomingAlarm.dId, emqxRuleId: incomingAlarm.emqxRuleId }).sort({ time: -1 }).limit(1);
 
-          saveNotifToMongo(incomingAlarm);
+          if (lastNotif == 0){
+            console.log("FIRST TIME ALARM");
+            saveNotifToMongo(incomingAlarm);
+          }else{
+
+            const lastNotifToNowMins = ( Date.now() - lastNotif[0].time ) / 1000 / 60;
+
+            if (lastNotifToNowMins > incomingAlarm.triggerTime){
+                console.log("TRIGGERED");
+                saveNotifToMongo(incomingAlarm);
+            }
+
+          }
+
+          
           
           res.sendStatus(200);
         
