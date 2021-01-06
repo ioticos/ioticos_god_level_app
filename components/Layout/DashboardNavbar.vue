@@ -20,6 +20,7 @@
     </div>
 
     <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
+      
       <el-select
         class="select-success"
         placeholder="Select Device"
@@ -43,29 +44,24 @@
         class="nav-item"
       >
         <template slot="title">
-          <div class="notification d-none d-lg-block d-xl-block"></div>
+          <div v-if="$store.state.notifications.length > 0" class="notification d-none d-lg-block d-xl-block"></div>
           <i class="tim-icons icon-sound-wave"></i>
           <p class="d-lg-none">New Notifications</p>
         </template>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item"
-            >Mike John responded to your email</a
-          >
+
+        <li @click="notificationReaded(notification._id)" v-for="notification in $store.state.notifications" class="nav-link">
+          <a href="#" class="nav-item dropdown-item">
+            <b style="color:orangered">{{ unixToDate(notification.time)}}</b>
+              <div style="margin-left:50px">
+                <b>Device: </b> {{notification.deviceName}} <br>
+                <b>Variable: </b> {{notification.variableFullName}} <br>
+                <b>Condition: </b> {{notification.condition}} <br>
+                <b>Limit: </b> {{notification.value}} <br>
+                <b>Value: </b> {{notification.payload.value}}
+              </div>    
+          </a>
         </li>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">You have 5 more tasks</a>
-        </li>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item"
-            >Your friend Michael is in town</a
-          >
-        </li>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Another notification</a>
-        </li>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Another one</a>
-        </li>
+
       </base-dropdown>
 
       <base-dropdown
@@ -132,7 +128,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getDevices");
-
+    this.$store.dispatch("getNotifications");
     this.$nuxt.$on("selectedDeviceIndex", this.updateSelectedDeviceIndex);
   },
   beforeDestroy(){
@@ -141,6 +137,31 @@ export default {
   methods: {
     updateSelectedDeviceIndex(index){
       this.selectedDevice = index;
+    },
+    notificationReaded(notifId) {
+
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.token
+        }
+      };
+
+      const toSend = {
+        notifId: notifId
+      };
+
+      this.$axios
+        .put("/notifications", toSend, axiosHeaders)
+        .then(res => {
+         
+          this.$store.dispatch("getNotifications");
+
+        })
+        .catch(e => {
+          console.log(e);
+          return;
+        });
+
     },
     selectDevice() {
       const device = this.$store.state.devices[this.selectedDevice];
@@ -168,6 +189,33 @@ export default {
         });
 
     },
+    //UNIX A FECHA
+    unixToDate(ms) {
+        var d = new Date(parseInt(ms)), 
+          yyyy = d.getFullYear(),
+          mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
+          dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
+          hh = d.getHours(),
+          h = hh,
+          min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
+          ampm = 'AM',
+          time;
+
+        if (hh > 12) {
+          h = hh - 12;
+          ampm = 'PM';
+        } else if (hh === 12) {
+          h = 12;
+          ampm = 'PM';
+        } else if (hh == 0) {
+          h = 12;
+        }
+
+        // ie: 2013-02-18, 8:35 AM	
+        time = dd + '/' + mm + '/' + yyyy + ', ' + h + ':' + min + ' ' + ampm;
+
+        return time;
+      },
     capitalizeFirstLetter(string) {
       if (!string || typeof string !== "string") {
         return "";
