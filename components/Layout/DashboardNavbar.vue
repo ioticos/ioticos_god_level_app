@@ -146,6 +146,8 @@ export default {
         }
       };
 
+      var auto
+
       const toSend = {
         notifId: notifId
       };

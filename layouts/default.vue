@@ -35,24 +35,19 @@
         >
         </sidebar-item>
 
-
         <sidebar-item
-        :link="{
-          name: 'Templates',
-          icon: 'tim-icons icon-chart-pie-36',
-          path: '/templates'
-        }"
-      >
-      </sidebar-item>
-
-
-
-
+          :link="{
+            name: 'Templates',
+            icon: 'tim-icons icon-chart-pie-36',
+            path: '/templates'
+          }"
+        >
+        </sidebar-item>
       </template>
-    </side-bar> 
+    </side-bar>
 
-        <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
-        <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
+    <!--Share plugin (for demo purposes). You can remove it if don't plan on using it-->
+    <sidebar-share :background-color.sync="sidebarBackground"> </sidebar-share>
 
     <div class="main-panel" :data="sidebarBackground">
       <dashboard-navbar></dashboard-navbar>
@@ -93,6 +88,7 @@ import DashboardNavbar from "@/components/Layout/DashboardNavbar.vue";
 import ContentFooter from "@/components/Layout/ContentFooter.vue";
 import DashboardContent from "@/components/Layout/Content.vue";
 import { SlideYDownTransition, ZoomCenterTransition } from "vue2-transitions";
+import mqtt from "mqtt";
 
 export default {
   components: {
@@ -105,7 +101,8 @@ export default {
   },
   data() {
     return {
-      sidebarBackground: "primary" //vue|blue|orange|green|red|primary
+      sidebarBackground: "primary", //vue|blue|orange|green|red|primary
+      client:null
     };
   },
   computed: {
@@ -114,6 +111,73 @@ export default {
     }
   },
   methods: {
+
+    startMqttClient() {
+      const options = {
+        host: "localhost",
+        port: 8083,
+        endpoint: "/mqtt",
+        clean: true,
+        connectTimeout: 5000,
+        reconnectPeriod: 5000,
+
+        // Certification Information
+        clientId: "web_" + this.$store.state.auth.userData.name + "_" + Math.floor(Math.random() * 1000000 + 1),
+        username: "superuser",
+        password: "superuser"
+      };
+
+      //ex topic: "userid/did/variableId/sdata"
+      const deviceSubscribeTopic = this.$store.state.auth.userData._id + "/+/+/sdata";
+      const notifSubscribeTopic = this.$store.state.auth.userData._id + "/+/+/notif";
+
+      const connectUrl = "ws://" + options.host + ":" + options.port + options.endpoint;
+
+      try {
+        this.client = mqtt.connect(connectUrl, options);
+      } catch (error) {
+        console.log(error);
+      }
+
+      //MQTT CONNECTION SUCCESS
+      this.client.on('connect', () => {
+
+        console.log('Connection succeeded!');
+
+        //SDATA SUBSCRIBE
+        this.client.subscribe(deviceSubscribeTopic, {qos:0}, (err) => {
+          if (err){
+            console.log("Error in DeviceSubscription");
+            return;
+          }
+          console.log("Device subscription Success");
+        });
+
+        //NOTIF SUBSCRIBE
+        this.client.subscribe(notifSubscribeTopic, {qos:0}, (err) => {
+          if (err){
+            console.log("Error in NotifSubscription");
+            return;
+          }
+          console.log("Notif subscription Success");
+        });
+
+      });
+
+
+      this.client.on('error', error => {
+          console.log('Connection failed', error)
+      })
+
+      this.client.on("reconnect", (error) => {
+          console.log("reconnecting:", error);
+      });
+    
+    },
+      
+
+    
+
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
@@ -136,6 +200,7 @@ export default {
   },
   mounted() {
     this.initScrollbar();
+    this.startMqttClient();
   }
 };
 </script>
