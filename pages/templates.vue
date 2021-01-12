@@ -550,7 +550,7 @@
           </div>
         </div>
       </card>
-    </div>
+    </div> 
 
     <!-- DASHBOARD PREVIEW -->
     <div class="row">
