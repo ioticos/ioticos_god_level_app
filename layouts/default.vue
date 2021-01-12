@@ -110,9 +110,13 @@ export default {
       return this.$route.path === "/maps/full-screen";
     }
   },
+  beforeDestroy(){
+    this.$nuxt.$off("mqtt-sender");
+  },
   methods: {
 
     startMqttClient() {
+
       const options = {
         host: "localhost",
         port: 8083,
@@ -174,6 +178,8 @@ export default {
           console.log("reconnecting:", error);
       });
 
+
+
       this.client.on('message', (topic, message) => {
 
         console.log("Message from topic " + topic + " -> ");
@@ -199,14 +205,15 @@ export default {
         } catch (error) {
           console.log(error);
         }
-        
-
-
-
 
       });
 
-    
+      
+      $nuxt.$on('mqtt-sender', (toSend) => {
+        this.client.publish(toSend.topic, JSON.stringify(toSend.msg));
+      });
+
+
     },
       
 

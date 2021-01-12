@@ -12,7 +12,7 @@
       style="font-size: 30px"
     ></i>
 
-    <base-button  @click="sendValue()" :type="config.class" class="mb-3 pull-right" size="lg">Add</base-button>
+    <base-button  @click="sendValue()" :type="config.class" class="mb-3 pull-right" size="lg">{{config.text}}</base-button>
 
   </card>
 </template>
