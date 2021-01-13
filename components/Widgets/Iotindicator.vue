@@ -24,7 +24,7 @@ export default {
     };
   },
   mounted(){
-      //userId/dId/uniquestr/sdata
+    //userId/dId/uniquestr/sdata
     const topic = this.config.userId + "/" + this.config.selectedDevice.dId + "/" + this.config.variable + "/sdata";
     console.log(topic);
     this.$nuxt.$on(topic, this.processReceivedData)
