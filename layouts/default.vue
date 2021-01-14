@@ -117,7 +117,7 @@ export default {
 
     startMqttClient() {
 
-      const options = {
+      var options = {
         host: "localhost",
         port: 8083,
         endpoint: "/mqtt",
@@ -127,8 +127,8 @@ export default {
 
         // Certification Information
         clientId: "web_" + this.$store.state.auth.userData.name + "_" + Math.floor(Math.random() * 1000000 + 1),
-        username: "superuser",
-        password: "superuser"
+        username: "",
+        password: ""
       };
 
       //ex topic: "userid/did/variableId/sdata"

@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { checkAuth } = require('../middlewares/authentication.js');
 
 //models import
 import User from "../models/user.js";
+import EmqxAuthRule from "../models/emqx_auth.js";
 
 //POST -> req.body
 //GET -> req.query
@@ -86,5 +88,97 @@ router.post("/register", async (req, res) => {
     return res.status(500).json(toSend);
   }
 });
+
+
+//GET MQTT WEB CREDENTIALS
+router.post("/getmqttcredentials", checkAuth,  async (req, res) => {
+
+  try {
+    const userId = req.userData._id;
+
+    const credentials = await getWebUserMqttCredentials(userId);
+
+    res.json(credentials);
+
+  } catch (error) {
+    console.log(error);
+
+    const toSend = {
+      status: "error"
+    };
+
+    return res.status(500).json(toSend);
+  }
+
+
+
+});
+
+
+
+// mqtt credential types: "user", "device", "superuser"
+async function getWebUserMqttCredentials(userId){
+
+  try {
+    var rule = await EmqxAuthRule.find({ type: "user", userId: userId });
+
+    if(rule.length == 0){
+
+      const newRule = {
+        userId: userId,
+        username: makeid(10),
+        password: makeid(10),
+        publish: [userId + "/#"],
+        subscribe: [userId + "/#"],
+        type: "user",
+        time: Date.now(),
+        updatedTime: Date.now()
+      }
+
+    const result = await EmqxAuthRule.create(newRule);
+
+    const toReturn = {
+      username: result.username,
+      password: result.password
+    }
+
+    return toReturn;
+
+    }
+
+    const newUserName = makeid(10);
+    const newPassword = makeid(10);
+
+    const result = await EmqxAuthRule.updateOne({type:"user", userId: userId}, {$set: {username: newUserName, password: newPassword, updatedTime: Date.now()}});
+
+        // update response example
+      //{ n: 1, nModified: 1, ok: 1 }
+
+    if (result.n == 1 && result.ok == 1) {
+        return {
+            mqttUsername: newUsername,
+            mqttPassword: newPassword
+        }
+    }else{
+        return false;
+    }
+
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+
+}
+
+
+function makeid(length) {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 module.exports = router;
