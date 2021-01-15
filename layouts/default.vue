@@ -84,6 +84,8 @@ function initScrollbar(className) {
   }
 }
 
+
+
 import DashboardNavbar from "@/components/Layout/DashboardNavbar.vue";
 import ContentFooter from "@/components/Layout/ContentFooter.vue";
 import DashboardContent from "@/components/Layout/Content.vue";
@@ -102,22 +104,8 @@ export default {
   data() {
     return {
       sidebarBackground: "primary", //vue|blue|orange|green|red|primary
-      client:null
-    };
-  },
-  computed: {
-    isFullScreenRoute() {
-      return this.$route.path === "/maps/full-screen";
-    }
-  },
-  beforeDestroy(){
-    this.$nuxt.$off("mqtt-sender");
-  },
-  methods: {
-
-    startMqttClient() {
-
-      var options = {
+      client:null,
+      options:{
         host: "localhost",
         port: 8083,
         endpoint: "/mqtt",
@@ -129,16 +117,64 @@ export default {
         clientId: "web_" + this.$store.state.auth.userData.name + "_" + Math.floor(Math.random() * 1000000 + 1),
         username: "",
         password: ""
-      };
+      }
+
+    };
+  },
+  computed: {
+    isFullScreenRoute() {
+      return this.$route.path === "/maps/full-screen";
+    }
+  },
+  mounted() {
+    this.$store.dispatch("getNotifications");
+    this.initScrollbar();
+    this.startMqttClient();
+
+  },
+  beforeDestroy(){
+    this.$nuxt.$off("mqtt-sender");
+  },
+  methods: {
+
+    async getMqttCredentials() {
+
+      try {
+
+        const axiosHeaders = {
+          headers: {
+            token: this.$store.state.auth.token
+          }
+        };
+
+        const credentials = await this.$axios.post("/getmqttcredentials", null ,axiosHeaders);
+        console.log(credentials.data)
+
+        if(credentials.data.status=="success"){
+          this.options.username = credentials.data.username;
+          this.options.password = credentials.data.password;
+        }
+
+
+      } catch (error) {
+        console.log(error);
+      }
+           
+
+    },
+
+    async startMqttClient() {
+
+      await this.getMqttCredentials();
 
       //ex topic: "userid/did/variableId/sdata"
       const deviceSubscribeTopic = this.$store.state.auth.userData._id + "/+/+/sdata";
       const notifSubscribeTopic = this.$store.state.auth.userData._id + "/+/+/notif";
 
-      const connectUrl = "ws://" + options.host + ":" + options.port + options.endpoint;
+      const connectUrl = "ws://" + this.options.host + ":" + this.options.port + this.options.endpoint;
 
       try {
-        this.client = mqtt.connect(connectUrl, options);
+        this.client = mqtt.connect(connectUrl, this.options);
       } catch (error) {
         console.log(error);
       }
@@ -177,8 +213,6 @@ export default {
       this.client.on("reconnect", (error) => {
           console.log("reconnecting:", error);
       });
-
-
 
       this.client.on('message', (topic, message) => {
 
@@ -238,13 +272,9 @@ export default {
         docClasses.add("perfect-scrollbar-off");
       }
     }
-  },
-  mounted() {
-    this.$store.dispatch("getNotifications");
-    this.initScrollbar();
-    this.startMqttClient();
-
   }
+
+
 };
 </script>
 <style lang="scss">

@@ -97,8 +97,21 @@ router.post("/getmqttcredentials", checkAuth,  async (req, res) => {
     const userId = req.userData._id;
 
     const credentials = await getWebUserMqttCredentials(userId);
+ 
+    const toSend = {
+      status: "success",
+      username: credentials.username,
+      password: credentials.password
+    }
 
-    res.json(credentials);
+    res.json(toSend);
+
+    setTimeout(() => {
+      getWebUserMqttCredentials(userId);
+    }, 5000);
+    
+
+    return 
 
   } catch (error) {
     console.log(error);
@@ -156,8 +169,8 @@ async function getWebUserMqttCredentials(userId){
 
     if (result.n == 1 && result.ok == 1) {
         return {
-            mqttUsername: newUsername,
-            mqttPassword: newPassword
+            username: newUserName,
+            password: newPassword
         }
     }else{
         return false;
