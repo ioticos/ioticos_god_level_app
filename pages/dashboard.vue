@@ -60,6 +60,10 @@ export default {
       widgetCopy.selectedDevice.dId = this.$store.state.selectedDevice.dId;
       widgetCopy.selectedDevice.name = this.$store.state.selectedDevice.name;
       widgetCopy.userId = this.$store.state.selectedDevice.userId;
+
+      if (widget.widget =="numberchart"){
+        widgetCopy.demo = false;
+      }
       
       return widgetCopy;
     }
