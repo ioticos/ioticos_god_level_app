@@ -83,6 +83,8 @@
 
           <el-table-column prop="dId" label="Device Id"></el-table-column>
 
+          <el-table-column prop="password" label="Password"></el-table-column>
+
           <el-table-column
             prop="templateName"
             label="Template"

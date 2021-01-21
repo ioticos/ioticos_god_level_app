@@ -77,6 +77,14 @@
               <br />
 
               <base-input
+                v-model.number="ncConfig.variableSendFreq"
+                label="Send Freq"
+                type="number"
+              ></base-input>
+
+              <br />
+
+              <base-input
                 v-model.number="ncConfig.chartTimeAgo"
                 label="Chart Back Time (mins)"
                 type="number"
@@ -407,6 +415,7 @@
 
             <!-- FORM INDICATOR TYPE -->
             <div v-if="widgetType == 'indicator'">
+
               <base-input
                 v-model="iotIndicatorConfig.variableFullName"
                 label="Var Name"
@@ -417,6 +426,14 @@
               <base-input
                 v-model="iotIndicatorConfig.icon"
                 label="Icon"
+                type="text"
+              ></base-input>
+
+              <br />
+
+              <base-input
+                v-model="iotIndicatorConfig.variableSendFreq"
+                label="Send Freq"
                 type="text"
               ></base-input>
 
@@ -712,6 +729,7 @@ export default {
       templateName: "",
       templateDescription: "",
 
+
       ncConfig: {
         userId: "sampleuserid",
         selectedDevice: {
@@ -720,6 +738,8 @@ export default {
         },
         variableFullName: "temperature",
         variable: "varname",
+        variableType: "input",
+        variableSendFreq: "30",
         unit: "Watts",
         class: "success",
         column: "col-12",
@@ -738,26 +758,13 @@ export default {
         },
         variableFullName: "Luz",
         variable: "varname",
+        variableType: "output",
         class: "danger",
         widget: "switch",
         icon: "fa-bath",
         column: "col-6"
       },
 
-      configButton: {
-        userId: "userid",
-        selectedDevice: {
-          name: "Home",
-          dId: "8888"
-        },
-        variableFullName: "temperature",
-        text: "send",
-        message: "testing123",
-        variable: "varname",
-        widget: "button",
-        icon: "fa-bath",
-        column: "col-6"
-      },
 
       iotIndicatorConfig: {
         userId: "userid",
@@ -767,11 +774,29 @@ export default {
         },
         variableFullName: "temperature",
         variable: "varname",
+        variableType: "input",
+        variableSendFreq: "30",
         class: "success",
         widget: "indicator",
         icon: "fa-bath",
         column: "col-6"
       },
+
+    //  configButton: {
+    //    userId: "userid",
+    //    selectedDevice: {
+    //      name: "Home",
+    //      dId: "8888"
+    //    },
+    //    variableFullName: "temperature",
+    //    variableType: "output",
+    //    text: "send",
+    //    message: "testing123",
+    //    variable: "varname",
+    //    widget: "button",
+    //    icon: "fa-bath",
+    //    column: "col-6"
+    //  },
 
       configButton: {
         userId: "userid",
@@ -784,6 +809,7 @@ export default {
         },
         variableFullName: "Pump",
         variable: "var1",
+        variableType: "output",
         icon: "fa-sun",
         column: "col-4",
         widget: "button",

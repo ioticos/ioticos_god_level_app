@@ -86,6 +86,8 @@ router.post("/device", checkAuth, async (req, res) => {
 
     newDevice.createdTime = Date.now();
 
+    newDevice.password = makeid(10);
+
     await createSaverRule(userId, newDevice.dId, true);
 
     const device = await Device.create(newDevice);
@@ -334,6 +336,17 @@ async function deleteSaverRule(dId) {
     console.log(error);
     return false;
   }
+}
+
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 module.exports = router;
