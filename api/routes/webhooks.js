@@ -56,7 +56,13 @@ router.post("/getdevicecredentials", async (req, res) => {
 
   const dId = req.body.dId;
 
+  const password = req.body.password;
+
   const device = await Device.findOne({ dId: dId });
+
+  if (password != device.password) {
+    return res.status(401).json();
+  }
 
   const userId = device.userId;
 
@@ -95,7 +101,6 @@ router.post("/getdevicecredentials", async (req, res) => {
     getDeviceMqttCredentials(dId, userId);
     console.log("Device Credentials Updated");
   }, 10000);
-  
 });
 
 //SAVER WEBHOOK
