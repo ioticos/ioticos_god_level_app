@@ -19,90 +19,96 @@ var client;
 //******************
 
 var ex = {
-  username: 'superuser',
-  password: 'superuser',
-  topic: '5ffcc00149fdcf311a4de607/22222/',
+  username: "superuser",
+  password: "superuser",
+  topic: "5ffcc00149fdcf311a4de607/22222/",
   variables: [
     {
-      variable: '6hRtQGSFIl',
-      variableFullName: 'Temperature',
-      variableType: 'input',
+      variable: "6hRtQGSFIl",
+      variableFullName: "Temperature",
+      variableType: "input",
       variableSendFreq: 10
     },
     {
-      variable: 'byTmALXl2Y',
-      variableFullName: 'Humidity',
-      variableType: 'input',
+      variable: "byTmALXl2Y",
+      variableFullName: "Humidity",
+      variableType: "input",
       variableSendFreq: 5
     },
     {
-      variable: 'PMHPI0zBNQ',
-      variableFullName: 'Pump',
-      variableType: 'output',
+      variable: "PMHPI0zBNQ",
+      variableFullName: "Pump",
+      variableType: "output",
       variableSendFreq: undefined
     },
     {
-      variable: 'yvFApiNOqz',
-      variableFullName: 'Fan',
-      variableType: 'output',
+      variable: "yvFApiNOqz",
+      variableFullName: "Fan",
+      variableType: "output",
       variableSendFreq: undefined
     }
   ]
-}
+};
 
 //DEVICE CREDENTIALS WEBHOOK
 router.post("/getdevicecredentials", async (req, res) => {
-  console.log(req.body);
+  try {
 
-  const dId = req.body.dId;
+    const dId = req.body.dId;
 
-  const password = req.body.password;
+    const password = req.body.password;
 
-  const device = await Device.findOne({ dId: dId });
+    const device = await Device.findOne({ dId: dId });
 
-  if (password != device.password) {
-    return res.status(401).json();
+    if (password != device.password) {
+      return res.status(401).json();
+    }
+
+    const userId = device.userId;
+
+    var credentials = await getDeviceMqttCredentials(dId, userId);
+
+    var template = await Template.findOne({ _id: device.templateId });
+
+
+    var variables = [];
+
+    template.widgets.forEach(widget => {
+      var v = (({
+        variable,
+        variableFullName,
+        variableType,
+        variableSendFreq
+      }) => ({
+        variable,
+        variableFullName,
+        variableType,
+        variableSendFreq
+      }))(widget);
+
+      variables.push(v);
+    });
+
+    const response = {
+      username: credentials.username,
+      password: credentials.password,
+      topic: userId + "/" + dId + "/",
+      variables: variables
+    };
+
+
+    res.json(response);
+
+    setTimeout(() => {
+      getDeviceMqttCredentials(dId, userId);
+      console.log("Device Credentials Updated");
+    }, 10000);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
   }
-
-  const userId = device.userId;
-
-  var credentials = await getDeviceMqttCredentials(dId, userId);
-
-  var template = await Template.findOne({ _id: device.templateId });
-
-  console.log(template);
-
-  var variables = [];
-
-  template.widgets.forEach(widget => {
-    
-    var v = (({variable, variableFullName, variableType, variableSendFreq }) => ({
-      variable,
-      variableFullName,
-      variableType,
-      variableSendFreq
-    }))(widget);
-
-    variables.push(v);
-  });
-
-  const toSend = {
-    username: credentials.username,
-    password: credentials.password,
-    topic: userId + "/" + dId + "/",
-    variables: variables
-  };
-
-  console.log(toSend);
-
-  res.json(toSend);
-
-  setTimeout(() => {
-    getDeviceMqttCredentials(dId, userId);
-    console.log("Device Credentials Updated");
-  }, 10000);
-});
-
+}); 
+ 
 //SAVER WEBHOOK
 router.post("/saver-webhook", async (req, res) => {
   try {
@@ -141,7 +147,7 @@ router.post("/saver-webhook", async (req, res) => {
 router.post("/alarm-webhook", async (req, res) => {
   try {
     if (req.headers.token != "121212") {
-      req.sendStatus(404);
+      res.sendStatus(404);
       return;
     }
 
@@ -184,22 +190,22 @@ router.get("/notifications", checkAuth, async (req, res) => {
 
     const notifications = await getNotifications(userId);
 
-    const toSend = {
+    const response = {
       status: "success",
       data: notifications
     };
 
-    res.json(toSend);
+    res.json(response);
   } catch (error) {
     console.log("ERROR GETTING NOTIFICATIONS");
     console.log(error);
 
-    const toSend = {
+    const response = {
       status: "error",
       error: error
     };
 
-    return res.status(500).json(toSend);
+    return res.status(500).json(response);
   }
 });
 
@@ -215,21 +221,21 @@ router.put("/notifications", checkAuth, async (req, res) => {
       { readed: true }
     );
 
-    const toSend = {
+    const response = {
       status: "success"
     };
 
-    res.json(toSend);
+    res.json(response);
   } catch (error) {
     console.log("ERROR UPDATING NOTIFICATION STATUS");
     console.log(error);
 
-    const toSend = {
+    const response = {
       status: "error",
       error: error
     };
 
-    return res.status(500).json(toSend);
+    return res.status(500).json(response);
   }
 });
 
@@ -248,6 +254,7 @@ async function getDeviceMqttCredentials(dId, userId) {
     if (rule.length == 0) {
       const newRule = {
         userId: userId,
+        dId: dId,
         username: makeid(10),
         password: makeid(10),
         publish: [userId + "/" + dId + "/+/sdata"],

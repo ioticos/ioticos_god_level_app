@@ -16,4 +16,4 @@ const emqxAuthRuleSchema = new Schema({
 
 const EmqxAuthRule = mongoose.model('EmqxAuthRule', emqxAuthRuleSchema);
 
-export default EmqxAuthRule;    
+export default EmqxAuthRule;     

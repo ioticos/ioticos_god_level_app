@@ -57,7 +57,15 @@ export const actions = {
         }
       });
 
-      this.commit("setDevices", res.data.data)
+      //if all devices were removed
+      if (res.data.data.length == 0){
+        this.commit("setSelectedDevice", {});
+        $nuxt.$emit('selectedDeviceIndex', null);
+      }
+
+      this.commit("setDevices", res.data.data);
+
+
     }).catch(error => {
       console.log(error);
     });

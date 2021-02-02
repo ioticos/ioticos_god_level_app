@@ -4,6 +4,7 @@ const { checkAuth } = require('../middlewares/authentication.js');
 
 //models import
 import Template from '../models/template.js';
+import Device from '../models/device.js';
 
 //get templates
 router.get('/template', checkAuth, async (req, res) => {
@@ -81,6 +82,19 @@ router.delete('/template', checkAuth, async (req, res) => {
 
         const userId = req.userData._id;
         const templateId = req.query.templateId;
+
+        const devices = await Device.find({userId: userId, templateId: templateId });
+
+
+        if (devices.length > 0){
+
+            const response = {
+                status: "fail",
+                error: "template in use"
+            }
+    
+            return res.json(response);
+        }
 
         const r = await Template.deleteOne({userId: userId, _id: templateId});
 

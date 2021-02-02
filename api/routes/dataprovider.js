@@ -15,15 +15,11 @@ router.get('/get-small-charts-data', checkAuth, async (req, res) => {
     const dId = req.query.dId;
     const variable = req.query.variable;
 
-
     const timeAgoMs = Date.now() - (chartTimeAgo * 60 * 1000 );
 
-    console.log(userId)
-    console.log(variable)
-    console.log(dId)
 
     const data =  await Data.find({userId: userId, dId:dId, variable: variable, "time": {$gt: timeAgoMs}}).sort({"time":1});
-    console.log(data);
+
 
     const response = {
       status: "success",

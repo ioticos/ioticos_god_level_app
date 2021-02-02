@@ -11,7 +11,7 @@
         <sidebar-item
           :link="{
             name: 'Dashboard',
-            icon: 'tim-icons icon-chart-pie-36',
+            icon: 'tim-icons icon-laptop',
             path: '/dashboard'
           }"
         >
@@ -20,7 +20,7 @@
         <sidebar-item
           :link="{
             name: 'Devices',
-            icon: 'tim-icons icon-chart-pie-36',
+            icon: 'tim-icons icon-light-3',
             path: '/devices'
           }"
         >
@@ -29,7 +29,7 @@
         <sidebar-item
           :link="{
             name: 'Alarms',
-            icon: 'tim-icons icon-chart-pie-36',
+            icon: 'tim-icons icon-bell-55',
             path: '/alarms'
           }"
         >
@@ -38,7 +38,7 @@
         <sidebar-item
           :link="{
             name: 'Templates',
-            icon: 'tim-icons icon-chart-pie-36',
+            icon: 'tim-icons icon-atom',
             path: '/templates'
           }"
         >
@@ -134,14 +134,11 @@ export default {
     setTimeout(() => {
       this.startMqttClient();
     }, 2000);
-    
-  
   },
   beforeDestroy() {
     this.$nuxt.$off("mqtt-sender");
   },
   methods: {
-
     async getMqttCredentials() {
       try {
         const axiosHeaders = {
@@ -161,9 +158,13 @@ export default {
           this.options.username = credentials.data.username;
           this.options.password = credentials.data.password;
         }
-
       } catch (error) {
         console.log(error);
+        if (error.response.status == 401) {
+          console.log("NO VALID TOKEN");
+          localStorage.clear();
+          window.location.href = "/login";
+        }
       }
     },
 
@@ -186,14 +187,12 @@ export default {
           this.client.options.username = credentials.data.username;
           this.client.options.password = credentials.data.password;
         }
-
       } catch (error) {
         console.log(error);
       }
     },
 
     async startMqttClient() {
-      
       await this.getMqttCredentials();
 
       //ex topic: "userid/did/variableId/sdata"
@@ -217,9 +216,8 @@ export default {
 
       //MQTT CONNECTION SUCCESS
       this.client.on("connect", () => {
-
         console.log(this.client);
-        
+
         console.log("Connection succeeded!");
 
         //SDATA SUBSCRIBE
@@ -245,14 +243,11 @@ export default {
 
       this.client.on("error", error => {
         console.log("Connection failed", error);
-
       });
 
       this.client.on("reconnect", error => {
-
         console.log("reconnecting:", error);
         this.getMqttCredentialsForReconnection();
-        
       });
 
       this.client.on("disconnect", error => {

@@ -33,6 +33,10 @@
     </div>
   </div>
 
+  <div v-else>
+    Select a Device...
+  </div>
+
 </template>
 <script>
 

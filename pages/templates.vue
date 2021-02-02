@@ -704,8 +704,7 @@
       </card>
     </div>
 
-    <!-- JSONS -->
-    <Json :value="widgets"></Json>
+
   </div>
 </template>
 
@@ -745,8 +744,8 @@ export default {
         column: "col-12",
         decimalPlaces: 2,
         widget: "numberchart",
-        icon: "fa-bath",
-        chartTimeAgo: 1566,
+        icon: "fa-sun",
+        chartTimeAgo: 60,
         demo: true
       },
 
@@ -781,22 +780,6 @@ export default {
         icon: "fa-bath",
         column: "col-6"
       },
-
-    //  configButton: {
-    //    userId: "userid",
-    //    selectedDevice: {
-    //      name: "Home",
-    //      dId: "8888"
-    //    },
-    //    variableFullName: "temperature",
-    //    variableType: "output",
-    //    text: "send",
-    //    message: "testing123",
-    //    variable: "varname",
-    //    widget: "button",
-    //    icon: "fa-bath",
-    //    column: "col-6"
-    //  },
 
       configButton: {
         userId: "userid",
@@ -880,6 +863,8 @@ export default {
             message: "Template created!"
           });
           this.getTemplates();
+
+          this.widgets = [];
         }
       } catch (error) {
         this.$notify({
@@ -911,10 +896,23 @@ export default {
 
         const res = await this.$axios.delete("/template", axiosHeaders);
 
+        console.log(res.data)
+
+        if (res.data.status == "fail" && res.data.error == "template in use") {
+
+          this.$notify({
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: template.name + " is in use. First remove the devices linked to the template!"
+          });
+          
+          return;
+        }
+
         if (res.data.status == "success") {
           this.$notify({
             type: "success",
-            icon: "tim-icons icon-alert-circle-exc",
+            icon: "tim-icons icon-check-2",
             message: template.name + " was deleted!"
           });
           
@@ -952,6 +950,7 @@ export default {
         this.iotIndicatorConfig.variable = this.makeid(10);
         this.widgets.push(JSON.parse(JSON.stringify(this.iotIndicatorConfig)));
       }
+
     },
 
     //Delete Widget

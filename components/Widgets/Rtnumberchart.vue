@@ -5,7 +5,6 @@
 
         <template slot="header">
 
-            {{config.selectedDevice.dId}}
 
             <h5 class="card-category pull-right">{{getTimeAgo((nowTime - time) / 1000)}} ago </h5>
 
@@ -233,14 +232,20 @@
             },
 
             procesReceivedData(data) {
-                this.time = Date.now();
-                this.value = data.value;
 
-                setTimeout(() => {
-                    if(data.save==1){
-                        this.getChartData();
-                    }  
-                }, 1000);
+                try {
+                    this.time = Date.now();
+                    this.value = data.value;
+
+                    setTimeout(() => {
+                        if(data.save==1){
+                            this.getChartData();
+                        }  
+                    }, 1000);
+                } catch (error) {
+                    console.log(error);
+                }
+
                
             },
 
