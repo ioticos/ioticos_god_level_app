@@ -18,9 +18,10 @@ import EmqxAuthRule from "../models/emqx_auth.js";
 const auth = {
   auth: {
     username: "admin",
-    password: "emqxsecret"
+    password: process.env.EMQX_DEFAULT_APPLICATION_SECRET
   }
 };
+
 
 //GET DEVICES
 router.get("/device", checkAuth, async (req, res) => {

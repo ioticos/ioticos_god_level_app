@@ -6,7 +6,7 @@ const colors = require("colors");
 const auth = {
   auth: {
     username: "admin",
-    password: "emqxsecret"
+    password: process.env.EMQX_DEFAULT_APPLICATION_SECRET
   }
 };
 
@@ -104,7 +104,7 @@ async function createResources() {
             "config": {
                 url: "http://localhost:3001/api/saver-webhook",
                 headers: {
-                    token: "121212"
+                    token: process.env.EMQX_API_TOKEN
                 },
                 method: "POST"
             },
@@ -116,7 +116,7 @@ async function createResources() {
             "config": {
                 url: "http://localhost:3001/api/alarm-webhook",
                 headers: {
-                    token: "121212"
+                    token: process.env.EMQX_API_TOKEN
                 },
                 method: "POST"
             },

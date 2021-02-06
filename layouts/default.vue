@@ -104,8 +104,8 @@ export default {
       sidebarBackground: "primary", //vue|blue|orange|green|red|primary
       client: null,
       options: {
-        host: "localhost",
-        port: 8083,
+        host: process.env.mqtt_host,
+        port: process.env.mqtt_port,
         endpoint: "/mqtt",
         clean: true,
         connectTimeout: 5000,
@@ -160,9 +160,14 @@ export default {
         }
       } catch (error) {
         console.log(error);
+
         if (error.response.status == 401) {
           console.log("NO VALID TOKEN");
           localStorage.clear();
+
+          const auth = {};
+          this.$store.commit("setAuth", auth);
+
           window.location.href = "/login";
         }
       }
@@ -188,7 +193,20 @@ export default {
           this.client.options.password = credentials.data.password;
         }
       } catch (error) {
+
         console.log(error);
+
+
+        if (error.response.status == 401) {
+          console.log("NO VALID TOKEN");
+          localStorage.clear();
+
+          const auth = {};
+          this.$store.commit("setAuth", auth);
+
+          window.location.href = "/login";
+        }
+        
       }
     },
 
@@ -202,7 +220,7 @@ export default {
         this.$store.state.auth.userData._id + "/+/+/notif";
 
       const connectUrl =
-        "ws://" +
+        process.env.mqtt_prefix +
         this.options.host +
         ":" +
         this.options.port +
