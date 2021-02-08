@@ -3,6 +3,9 @@ const router = express.Router();
 const axios = require("axios");
 const colors = require("colors");
 
+
+
+
 const auth = {
   auth: {
     username: "admin",
@@ -149,8 +152,15 @@ async function createResources() {
 }
 
 
+
+
+//check if superuser exist if not we create one
+
+
+
 setTimeout(() => {
   listResources();
+  
 }, 1000);
 
 module.exports = router;
