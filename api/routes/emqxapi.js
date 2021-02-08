@@ -186,16 +186,12 @@ global.check_mqtt_superuser = async function checkMqttSuperUser(){
     console.log("error creating mqtt superuser ");
     console.log(error);
   }
-
-
 }
 
 
 
 setTimeout(() => {
   listResources();
-  
-  
-}, 1000);
+}, proces.env.EMQX_RESOURCES_DELAY);
 
 module.exports = router;
