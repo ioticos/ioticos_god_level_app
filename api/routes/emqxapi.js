@@ -4,7 +4,7 @@ const axios = require("axios");
 const colors = require("colors");
 
 
-
+import EmqxAuthRule from "../models/emqx_auth.js";
 
 const auth = {
   auth: {
@@ -155,11 +155,46 @@ async function createResources() {
 
 
 //check if superuser exist if not we create one
+global.check_mqtt_superuser = async function checkMqttSuperUser(){
+
+  try {
+    const superusers = await EmqxAuthRule.find({type:"superuser"});
+
+    if (superusers.length > 0 ) {
+  
+      return;
+  
+    }else if ( superusers.length == 0 ) {
+  
+      await EmqxAuthRule.create(
+        {
+          publish: ["#"],
+          subscribe: ["#"],
+          userId: "aaaaaaaaaaa",
+          username: "superuser",
+          password: "superuser",
+          type: "superuser",
+          time: Date.now(),
+          updatedTime: Date.now()
+        }
+      );
+  
+      console.log("Mqtt super user created")
+  
+    }
+  } catch (error) {
+    console.log("error creating mqtt superuser ");
+    console.log(error);
+  }
+
+
+}
 
 
 
 setTimeout(() => {
   listResources();
+  
   
 }, 1000);
 
