@@ -39,7 +39,7 @@ app.listen(process.env.API_PORT, () => {
 });
 
 
-if (process.env.environment != "dev"){
+if (process.env.SSLREDIRECT == "true"){
 
   const app2 = express();
 
