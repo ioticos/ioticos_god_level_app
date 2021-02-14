@@ -101,6 +101,8 @@ async function createResources() {
 
     try {
         const url = "http://"+process.env.EMQX_NODE_HOST+":8085/api/v4/resources";
+        console.log("URL RESOURCES ->->->->->->->->->->->->->->->->->->->->");
+        console.log(url);
 
         const data1 = {
             "type": "web_hook",
@@ -170,9 +172,9 @@ global.check_mqtt_superuser = async function checkMqttSuperUser(){
         {
           publish: ["#"],
           subscribe: ["#"],
-          userId: "aaaaaaaaaaa",
-          username: "superuser",
-          password: "superuser",
+          userId: "emqxmqttsuperuser",
+          username: process.env.EMQX_NODE_SUPERUSER_USER,
+          password: process.env.EMQX_NODE_SUPERUSER_PASSWORD,
           type: "superuser",
           time: Date.now(),
           updatedTime: Date.now()
