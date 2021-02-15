@@ -220,11 +220,13 @@ export default {
         this.$store.state.auth.userData._id + "/+/+/notif";
 
       const connectUrl =
-        process.env.mqtt_prefix +
+        process.env.mqtt_prefix + 
         this.options.host +
         ":" +
         this.options.port +
         this.options.endpoint;
+
+        
 
       try {
         this.client = mqtt.connect(connectUrl, this.options);
