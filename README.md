@@ -6,6 +6,8 @@ El mismo fue desarrollado en el curso IoT Bootcamp God Level.
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/ZePfdyJPCvM/0.jpg)](http://www.youtube.com/watch?v=ZePfdyJPCvM "IoT Bootcamp (God Level)")
 
+[![IoTicos GL](https://yt-embed.herokuapp.com/embed?v=ZePfdyJPCvM)](https://www.youtube.com/watch?v=ZePfdyJPCvM "IoTicos GL")
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZePfdyJPCvM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Puedes acceder a más información sobre la plataforma en la primer clase:
