@@ -74,8 +74,6 @@ export default {
     '/api': '~/api'
   },
 
-  
-
   /*
   ** Build configuration
   */
