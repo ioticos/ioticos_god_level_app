@@ -4,7 +4,9 @@ Este proyecto contiene tanto el repositorio creado en NUXT como la API desarroll
 
 El mismo fue desarrollado en el curso IoT Bootcamp God Level.
 
-[https://www.youtube.com/watch?v=ZePfdyJPCvM](https://www.youtube.com/watch?v=ZePfdyJPCvM)
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/ZePfdyJPCvM/0.jpg)]
+(http://www.youtube.com/watch?v=ZePfdyJPCvM "IoT Bootcamp (God Level)")
+
 
 ### Puedes acceder a más información sobre la plataforma en la primer clase:
 
