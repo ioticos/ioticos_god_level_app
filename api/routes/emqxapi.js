@@ -90,6 +90,9 @@ try {
     console.log("Error listing emqx resources");
     console.log(error);
 }
+
+
+
  
 }
 
@@ -97,34 +100,31 @@ try {
 async function createResources() {
 
     try {
-
-        const url = "http://" + process.env.EMQX_API_HOST + ":8085/api/v4/resources";
+        const url = "http://" + process.env.EMQX_API_HOST +":8085/api/v4/resources";
 
         const data1 = {
-          type: "web_hook",
-          config: {
-            url:
-              "http://" + process.env.WEBHOOKS_HOST + ":3001/api/saver-webhook",
-            headers: {
-              token: process.env.WEBHOOK_TOKEN
+            "type": "web_hook",
+            "config": {
+                url: "http://" + process.env.WEBHOOKS_HOST +":3001/api/saver-webhook",
+                headers: {
+                    token: process.env.EMQX_API_TOKEN
+                },
+                method: "POST"
             },
-            method: "POST"
-          },
-          description: "saver-webhook"
-        };
+            description: "saver-webhook"
+        }
     
         const data2 = {
-          type: "web_hook",
-          config: {
-            url:
-              "http://" + process.env.WEBHOOKS_HOST + ":3001/api/alarm-webhook",
-            headers: {
-              token: process.env.WEBHOOK_TOKEN
+            "type": "web_hook",
+            "config": {
+                url: "http://" + process.env.WEBHOOKS_HOST +":3001/api/alarm-webhook",
+                headers: {
+                    token: process.env.EMQX_API_TOKEN
+                },
+                method: "POST"
             },
-            method: "POST"
-          },
-          description: "alarm-webhook"
-        };
+            description: "alarm-webhook"
+        }
     
         const res1 = await axios.post(url, data1, auth);
     
@@ -150,7 +150,6 @@ async function createResources() {
    
 
 }
-
 
 
 

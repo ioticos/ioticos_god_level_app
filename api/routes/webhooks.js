@@ -18,9 +18,11 @@ var client;
 //**** A P I *******
 //******************
 
+
 //DEVICE CREDENTIALS WEBHOOK
 router.post("/getdevicecredentials", async (req, res) => {
   try {
+
     const dId = req.body.dId;
 
     const password = req.body.password;
@@ -36,6 +38,7 @@ router.post("/getdevicecredentials", async (req, res) => {
     var credentials = await getDeviceMqttCredentials(dId, userId);
 
     var template = await Template.findOne({ _id: device.templateId });
+
 
     var variables = [];
 
@@ -62,6 +65,7 @@ router.post("/getdevicecredentials", async (req, res) => {
       variables: variables
     };
 
+
     res.json(response);
 
     setTimeout(() => {
@@ -70,10 +74,10 @@ router.post("/getdevicecredentials", async (req, res) => {
     }, 10000);
   } catch (error) {
     console.log(error);
-    return res.status(500).json();
+    res.sendStatus(500);
   }
-});
-
+}); 
+ 
 //SAVER WEBHOOK
 router.post("/saver-webhook", async (req, res) => {
   try {
@@ -273,7 +277,7 @@ async function getDeviceMqttCredentials(dId, userId) {
 function startMqttClient() {
   const options = {
     port: 1883,
-    host: process.env.MQTT_NOTIFICATION_HOST,
+    host: process.env.EMQX_API_HOST,
     clientId:
       "webhook_superuser" + Math.round(Math.random() * (0 - 10000) * -1),
     username: process.env.EMQX_NODE_SUPERUSER_USER,
@@ -286,10 +290,7 @@ function startMqttClient() {
     encoding: "utf8"
   };
 
-  client = mqtt.connect(
-    "mqtt://" + process.env.MQTT_NOTIFICATION_HOST,
-    options
-  );
+  client = mqtt.connect("mqtt://" + process.env.EMQX_API_HOST, options);
 
   client.on("connect", function() {
     console.log("MQTT CONNECTION -> SUCCESS;".green);
