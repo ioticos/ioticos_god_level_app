@@ -43,6 +43,15 @@
           }"
         >
         </sidebar-item>
+
+        <sidebar-item
+          :link="{
+            name: 'Weather',
+            icon: 'tim-icons icon-atom',
+            path: '/weather'
+          }"
+        >
+        </sidebar-item>
       </template>
     </side-bar>
 
