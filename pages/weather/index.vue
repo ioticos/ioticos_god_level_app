@@ -1,55 +1,159 @@
 <template>
     <div>
-        <form @submit.prevent="searchWeather">
-            <label for="location">Ingresa tu ubicación:</label>
-            <input type="text" v-model="location" id="location" placeholder="e.g. Ciudad de México" />
-            <button type="submit">Buscar</button>
-        </form>
-        <div v-if="temperature && humidity">
-            <p>Temperatura actual: {{ temperature }}</p>
-            <p>Humedad: {{ humidity }}</p>
-        </div>
+        <CityInfoDetail
+            class="ww-city-info__info"
+            :forecast="forecast"
+            @change-view="$emit('change-view')" />
     </div>
-    
-  </template>
+
+</template>
   
-  <script>
-  import axios from 'axios';
-  
-  export default {
+<script>
+import CityInfoDetail from './components/CityInfoDetail/CityInfoDetail.vue';
+export default {
+    name: 'WeatherPage',
     middleware: "authenticated",
+    components: {
+        CityInfoDetail,
+    },
     data() {
-      return {
-        location: '',
-        temperature: '',
-        humidity: '',
-      };
+        return {
+            forecast: {}
+        };
+    },
+    mounted() {
+        this.searchWeather();
     },
     methods: {
-      async searchWeather() {
-        try {
-          // Realizamos una solicitud a la API de Geocoding para obtener la latitud y longitud de la ubicación especificada
-          const GEOCODING_API_KEY = process.env.weather_api_key;
-          console.log(process.env.weather_api_key)
-          
-          const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${this.location}&limit=1&appid=${GEOCODING_API_KEY}`);
-          console.log(response)
-          const locationData = response.data;
-          // Si se encontró una ubicación, utilizamos sus coordenadas para realizar una solicitud a la API de Open Weather y obtener el pronóstico del tiempo actual
-          if (response.status == 200) {
-            const WEATHER_API_KEY = process.env.weather_api_key;
-            const lat = locationData.lat;
-            const lon = locationData.lon;
-            const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`);
-            const weatherData = weatherResponse.data;
-            console.log(weatherData)
-            this.temperature = weatherData.main.temp;
-            this.humidity = weatherData.main.humidity;
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      },
+        async searchWeather() {
+            const weatherClient = this.$axios.create({
+                baseURL: 'https://api.openweathermap.org/data/2.5/',
+                timeout: 2000,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            weatherClient.interceptors.request.use((config) => {
+                config.params = config.params || {}
+                config.params.appid = process.env.weather_api_key
+                return config
+            })
+            try {
+                const { data } = await weatherClient.get(`/weather`, {
+                    params: {
+                        lat: 10.5060934,
+                        lon: -66.9146008,
+                        units: 'metric'
+                    }
+                })
+                console.log(data)
+                this.forecast = data;
+            } catch (error) {
+                console.error(error)
+            }
+        },
     },
-  };
-  </script>
+};
+</script>
+
+<style lang="scss" scoped>
+$font-size: 16px;
+$font-family: 'Montserrat', sans-serif !important;
+
+$color-primary: #6091e6;
+$color-black: #232323;
+$color-white: #fff;
+$color-grey:#f6f6f8;
+$color-bg-app:#f5f8fd;
+$color-icon:#7b7b7b;
+$color-placeholder:#c4c4d8;
+
+$color-bg-active-list-item: #9abaf2;
+
+$color-bg-info-detail-dark: #90b2ee;
+$color-bg-info-detail-light: #b6cffb;
+ .city-info-detail {
+    background: $color-bg-info-detail-dark;
+    background: linear-gradient(90deg, $color-bg-info-detail-dark, $color-bg-info-detail-light);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 1.25rem;
+    position: relative;
+    width: 100%;
+ }
+.change-view {
+        align-items: center;
+        color: $color-white;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        right: 1.25rem;
+        top: 1.25rem;
+        transition: color 100ms ease-in;
+        z-index: 1;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+
+     .date {
+        color: $color-white;
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+
+     .city {
+        color: $color-white;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+     .temperature {
+        color: $color-white;
+        font-size: 4rem;
+        width: 100%;
+
+        b {
+            position: relative;
+        }
+
+        span {
+            font-size: 0.9rem;
+            position: absolute;
+            right: 0;
+            top: 4px;
+            transform: translateX(100%);
+        }
+    }
+
+     .description {
+        color: $color-white;
+        font-size: 1rem;
+        text-transform: lowercase;
+        width: 100%;
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+     .icon {
+        display: inline-flex;
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
+
+        &>* {
+            width: 8rem !important;
+        }
+    }
+</style>
