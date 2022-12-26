@@ -1,0 +1,145 @@
+.vww__widget {
+  width: 100%;
+  min-width: 250px;
+  max-width: 800px;
+}
+
+.vww__header {
+  position: relative;
+  padding: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+}
+
+.vww__title {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.vww__content {
+  min-height: 150px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.vww__loading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vww__loading span {
+  display: block;
+  margin-left: 10px;
+}
+
+.vww__error {
+  width: 100%;
+  text-align: center;
+}
+.vww__error span {
+  display: block;
+  padding: 10px;
+}
+
+.vww__currently {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vww__currently > div {
+  display: flex;
+  align-items: center;
+}
+
+.vww__currently .vww__title {
+  margin-top: 10px;
+}
+
+.vww__temp {
+  padding: 0 10px;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 0.65em;
+}
+
+.vww__temp > div {
+  display: block;
+  text-align: center;
+  padding-right: 10px;
+}
+
+.vww__wind {
+  font-size: 14px;
+}
+
+.vww__daily {
+  display: none;
+  height: 100%;
+}
+
+@media screen and (min-width: 600px) {
+  .vww__currently {
+    width: 300px;
+  }
+  .vww__daily {
+    display: block;
+    height: 100%;
+    width: calc(100% - 300px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow-x: auto;
+  }
+}
+
+.vww__day {
+  height: 100%;
+  text-align: start;
+  position: relative;
+  min-width: 50px;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+.vww__day > span {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.vww__day-bar {
+  margin-top: 20px;
+  width: 30px;
+  height: calc(100% - 100px);
+}
+
+.vww__day-bar div {
+  margin: 0 5px;
+  display: flex;
+}
+
+.vww__day-bar div:first-child {
+  align-items: flex-end;
+}
+
+.vww__day-bar div:last-child {
+  align-items: flex-start;
+}
+
+.vww__day-bar span {
+  display: block;
+  font-size: 12px;
+}

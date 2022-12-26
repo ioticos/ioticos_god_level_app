@@ -1,83 +1,86 @@
 <template>
-    <div>
-        <CityInfoDetail class="ww-city-info__info" :forecast="forecast" />
-        <CityInfoMain class="ww-city-info__props" :info="mainInfo" />
-    </div>
+	<div class="vww__widget" :style="{ color: textColor }">
+		<slot name="header">
+			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
+				<span class="vww__title">
+					<slot name="title">Weather</slot>
+				</span>
+			</div>
+		</slot>
 
+		<div class="vww__content">
+			<div class="vww__loading" v-if="loading">
+				<slot name="loading">
+					<skycon condition="partly-cloudy-day" :color="textColor" :paused="disableAnimation" />
+					<span class="vww__title">Loading...</span>
+				</slot>
+			</div>
+
+			<div class="vww__error" v-else-if="error || !weather || !currently || !daily">
+				<slot name="error">
+					<skycon condition="rain" :color="textColor" :paused="disableAnimation" />
+					<span class="vww__title">{{ error || "Something went wrong!" }}</span>
+				</slot>
+			</div>
+
+			<template v-else>
+				<div class="vww__currently">
+					<div>
+						<skycon :condition="currently.icon" size="80" :color="textColor" :paused="disableAnimation" />
+						<div class="vww__temp">
+							{{ Math.round(currently.temperature) }}&deg;
+							<div v-if="isDownward">
+								<svg viewBox="0 0 306 306" width="24" height="24">
+									<polygon points="270.3,58.65 153,175.95 35.7,58.65 0,94.35 153,247.35 306,94.35"
+										:style="{ fill: textColor }" />
+								</svg>
+							</div>
+							<div v-else>
+								<svg viewBox="0 0 306 306" width="24" height="24">
+									<polygon points="35.7,247.35 153,130.05 270.3,247.35 306,211.65 153,58.65 0,211.65"
+										:style="{ fill: textColor }" />
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="vww__title">{{ currently.summary }}</div>
+					<div class="vww__wind">
+						Wind: {{ Math.round(currently.windSpeed) }} mph ({{ windBearing }})
+					</div>
+				</div>
+
+				<div class="vww__daily">
+					<div class="vww__day" :key="day.time" v-for="day in daily">
+						<span>{{ day.weekName }}</span>
+						<span>
+							<skycon style="display: block" :condition="day.icon" size="26" :color="textColor"
+								:paused="disableAnimation" />
+						</span>
+						<div class="vww__day-bar">
+							<div :style="{ height: `${day.top}%` }">
+								<span>{{ Math.round(day.temperatureMax) }}&deg;</span>
+							</div>
+							<div :style="{
+								borderRadius: '10px',
+								background: barColor,
+								height: `${day.height}%`,
+							}">
+								&nbsp;
+							</div>
+							<div :style="{ height: `${day.bottom}%` }">
+								<span>{{ Math.round(day.temperatureMin) }}&deg;</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
 </template>
   
-<script>
-import CityInfoDetail from './components/CityInfoDetail/CityInfoDetail.vue';
-import CityInfoMain from './components/CityInfoDetail/CityInfoMain.vue';
-export default {
-    name: 'WeatherPage',
-    middleware: "authenticated",
-    components: {
-        CityInfoDetail,
-        CityInfoMain,
-    },
-    data() {
-        return {
-            mainInfo: [],
-            forecast: {
-                main: { temp: 0 }
-            }
-        };
-    },
-    mounted() {
-        this.searchWeather();
-    },
-    methods: {
-        async searchWeather() {
-            const weatherClient = this.$axios.create({
-                baseURL: 'https://api.openweathermap.org/data/2.5/',
-                timeout: 2000,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+<script src="./script.js"></script>
+  
+<style src="./styles.scss" lang="scss">
 
-            weatherClient.interceptors.request.use((config) => {
-                config.params = config.params || {}
-                config.params.appid = process.env.weather_api_key
-                return config
-            })
-            try {
-                const { data } = await weatherClient.get(`/weather`, {
-                    params: {
-                        lat: 10.5060934,
-                        lon: -66.9146008,
-                        units: 'metric'
-                    }
-                })
-                console.log(data)
-                this.forecast = data;
-                const cloudiness = `${this.forecast.cloudiness}%`
-            const humidity = `${this.forecast.humidity}%`
-            const windSpeed = `${this.forecast.windSpeed}m/s`
-            const pressure = `${this.forecast.pressure}hPa`
-            this.mainInfo = [
-                {
-                    value: cloudiness,
-                    icon: 'cloud'
-                },
-                {
-                    value: humidity,
-                    icon: 'droplet'
-                },
-                {
-                    value: windSpeed,
-                    icon: 'wind'
-                },
-                {
-                    value: pressure,
-                    icon: 'clock'
-                }
-            ]
-            } catch (error) {
-                console.error(error)
-            }
-        },
-    },
-};
-</script>
+</style>
+  
