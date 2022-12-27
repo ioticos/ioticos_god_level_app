@@ -1,3 +1,7 @@
+ // A simple Widget create by Sudipto Chandra
+ // Original Widget on
+ // https://github.com/dipu-bd/vue-weather-widget.git
+
 import Utils from "./utils";
 import Skycon from "vue-skycons";
 
@@ -17,13 +21,6 @@ export default {
       default: process.env.weather_api_key
     },
 
-    // // Address to lookup location.
-    // address: {
-    //   type: String,
-    // },
-
-    // The latitude of a location (in decimal degrees).
-    // Positive is north, negative is south.
     latitude: {
       type: String,
       default: '-12.0431800'
@@ -37,14 +34,12 @@ export default {
     },
 
     // Return summary properties in the desired language.
-    // For list of supported languages, visit https://darksky.net/dev/docs/forecast
     language: {
       type: String,
-      default: "en",
+      default: "es",
     },
 
     // Return weather conditions in the requested units.
-    // For list of supported units, visit https://darksky.net/dev/docs/forecast
     units: {
       type: String,
       default: "metric",
@@ -73,22 +68,10 @@ export default {
       default: "#444",
     },
 
-    // Color of the text. Default: '#333'
+    // Color of the text. Default: '#f4f5f7'
     textColor: {
       type: String,
-      default: "#333",
-    },
-
-    // // Your positionstack api key for geocoding
-    // positionstackApi: {
-    //   type: String,
-    //   default: "7f9c71310f410847fceb9537a83f3882",
-    // },
-
-    // Your ipregistry key to get location from ip address
-    ipregistryKey: {
-      type: String,
-      default: "f8n4kqe8pv4kii",
+      default: "#f4f5f7",
     },
   },
 
@@ -219,33 +202,6 @@ export default {
     processLocation() {
       if (!this.latitude || !this.longitude) {
         throw new Error("VueWeatherWidget: Latitude or longitude is required");
-        // if (!this.address) {
-        //   return Utils.fetchLocationByIP(this.ipregistryKey).then((data) => {
-        //     this.$set(this, "location", {
-        //       lat: data.latitude,
-        //       lng: data.longitude,
-        //       name: `${data.city}, ${data.country.name}`,
-        //     });
-        //   });
-        // } else {
-        //   return Utils.geocode(this.positionstackApi, this.address).then((data) => {
-        //     this.$set(this, "location", {
-        //       lat: data.latitude,
-        //       lng: data.longitude,
-        //       name: `${data.region}, ${data.country}`,
-        //     });
-        //   });
-        // }
-      } else {
-        // return Utils.reverseGeocode(this.positionstackApi, this.latitude, this.longitude).then(
-        //   (data) => {
-        //     this.$set(this, "location", {
-        //       lat: this.latitude,
-        //       lng: this.longitude,
-        //       name: `${data.region}, ${data.country}`,
-        //     });
-        //   }
-        // );
       }
     },
   },

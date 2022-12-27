@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-const IP_CACHE = "vww__cache_ip";
-const IP_LOCATION_CACHE = "vww__cache_ip_location";
-const GEOCODE_CACHE = "vww__cache_geocode";
-
 const ICON_MAPPINGS = {
   "clear-day": ["01d"],
   "clear-night": ["01n"],
@@ -20,84 +16,10 @@ const ICON_MAPPINGS = {
 const UNIT_MAPPINGS = {
   auto: "standard",
   us: "imperial",
-  uk: "metric",
+  metric: "metric",
 };
 
 const utils = {
-  lookupIP: () => {
-    let cache = localStorage[IP_CACHE] || "{}";
-    cache = JSON.parse(cache);
-    if (cache.ip) {
-      return Promise.resolve(cache);
-    }
-
-    return fetch("https://www.cloudflare.com/cdn-cgi/trace")
-      .then((resp) => resp.text())
-      .then((text) => {
-        return text
-          .split("\n")
-          .map((l) => l.split("="))
-          .filter((x) => x.length == 2)
-          .reduce((o, x) => {
-            o[x[0].trim()] = x[1].trim();
-            return o;
-          }, {});
-      })
-      .then((data) => {
-        localStorage[IP_CACHE] = JSON.stringify(data);
-        return data;
-      });
-  },
-
-  fetchLocationByIP: (apiKey, ip) => {
-    if (!ip) {
-      return utils.lookupIP().then((data) => {
-        return utils.fetchLocationByIP(apiKey, data["ip"]);
-      });
-    }
-
-    let cache = localStorage[IP_LOCATION_CACHE] || "{}";
-    cache = JSON.parse(cache);
-    if (cache[ip]) {
-      return cache[ip];
-    }
-
-    apiKey = apiKey || "f8n4kqe8pv4kii";
-    return fetch(`https://api.ipregistry.co/${ip}?key=${apiKey}`)
-      .then((resp) => resp.json())
-      .then((result) => {
-        cache[ip] = result.location || {};
-        localStorage[IP_LOCATION_CACHE] = JSON.stringify(cache);
-        return cache[ip];
-      });
-    // latitude, longitude, city, country.name
-  },
-
-  geocode: (apiKey, query, reversed = false) => {
-    let cache = localStorage[GEOCODE_CACHE] || "{}";
-    cache = JSON.parse(cache);
-    if (cache[query]) {
-      return Promise.resolve(cache[query]);
-    }
-
-    apiKey = apiKey || "c3bb8aa0a56b21122dea6a2a8ada70c8";
-    const apiType = reversed ? "reverse" : "forward";
-    return fetch(`//api.positionstack.com/v1/${apiType}?access_key=${apiKey}&query=${query}`)
-      .then((resp) => resp.json())
-      .then((result) => {
-        if (result.error) {
-          throw new Error("(api.positionstack.com) " + result.error.message);
-        }
-        cache[query] = result.data[0];
-        localStorage[GEOCODE_CACHE] = JSON.stringify(cache);
-        return cache[query];
-      });
-    // latitude, longitude, region, country
-  },
-
-  reverseGeocode: (apiKey, lat, lng) => {
-    return utils.geocode(apiKey, `${lat},${lng}`, true);
-  },
   fetchOWMWeather: async (opts = {}) => {
     opts.units = opts.units || "auto";
     opts.language = opts.language || "en";

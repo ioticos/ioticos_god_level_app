@@ -3,7 +3,7 @@
 		<slot name="header">
 			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
 				<span class="vww__title">
-					<slot name="title">Weather</slot>
+					<slot name="title">Clima</slot>
 				</span>
 			</div>
 		</slot>
@@ -12,14 +12,14 @@
 			<div class="vww__loading" v-if="loading">
 				<slot name="loading">
 					<skycon condition="partly-cloudy-day" :color="textColor" :paused="disableAnimation" />
-					<span class="vww__title">Loading...</span>
+					<span class="vww__title">Cargando...</span>
 				</slot>
 			</div>
 
 			<div class="vww__error" v-else-if="error || !weather || !currently || !daily">
 				<slot name="error">
 					<skycon condition="rain" :color="textColor" :paused="disableAnimation" />
-					<span class="vww__title">{{ error || "Something went wrong!" }}</span>
+					<span class="vww__title">{{ error || "Algo sali&oacute mal!" }}</span>
 				</slot>
 			</div>
 
@@ -45,7 +45,7 @@
 					</div>
 					<div class="vww__title">{{ currently.summary }}</div>
 					<div class="vww__wind">
-						Wind: {{ Math.round(currently.windSpeed) }} mph ({{ windBearing }})
+						Viento: {{ Math.round(currently.windSpeed * 1.60934) }} Kph ({{ windBearing }})
 					</div>
 				</div>
 
