@@ -44,7 +44,22 @@ const utils = {
       throw new Error(error);
     }
   },
+  geoCoding: async (opts = {}) => {
 
+    const API_GEOCODING_ENDPOINT = 'https://api.openweathermap.org/geo/1.0/'
+        try {
+          const { data } = await axios.get(`${API_GEOCODING_ENDPOINT}direct`, {
+            params: {
+              q: opts.location,
+              appid: opts.apiKey,
+              limit: 5
+            }
+          })
+          return data
+        } catch (error) {
+          console.error(error)
+        }
+    },
   mapData: (data) => {
     const { current } = data;
     const { weather } = current;

@@ -1,5 +1,14 @@
 <template>
 	<div class="vww__widget" :style="{ color: textColor }">
+		<form @submit.prevent="search">
+			<input v-model="location" type="text" placeholder="Enter location">
+			<button type="submit">Search</button>
+		</form>
+		<select v-if="locations.length > 0" v-model="selectedLocation">
+			<option v-for="location in locations" :key="location.id" :value="location">
+				{{ location.name }}
+			</option>
+		</select>
 		<slot name="header">
 			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
 				<span class="vww__title">
@@ -61,10 +70,10 @@
 								<span>{{ Math.round(day.temperatureMax) }}&deg;</span>
 							</div>
 							<div :style="{
-								borderRadius: '10px',
-								background: barColor,
-								height: `${day.height}%`,
-							}">
+	borderRadius: '10px',
+	background: barColor,
+	height: `${day.height}%`,
+}">
 								&nbsp;
 							</div>
 							<div :style="{ height: `${day.bottom}%` }">

@@ -6,6 +6,7 @@ import Utils from "./utils";
 import Skycon from "vue-skycons";
 
 export default {
+  middleware: "authenticated",
   name: "VueWeatherWidget",
 
   components: {
@@ -17,7 +18,6 @@ export default {
     // OpenWeatherMap secret key
     apiKey: {
       type: String,
-      required: true,
       default: process.env.weather_api_key
     },
 
@@ -80,14 +80,19 @@ export default {
       loading: true,
       weather: null,
       error: null,
-      //location: {},
       timeout: null,
+      location: null,
+      locations: [],
+      searchTimeout: null
     };
   },
 
   watch: {
+    location: function (newValue) {
+      clearTimeout(this.searchTimeout)
+      this.searchTimeout = setTimeout(() => this.search(), 1000)
+    },
     apiKey: "hydrate",
-    // address: "hydrate",
     latitude: "hydrate",
     longitude: "hydrate",
     language: "hydrate",
@@ -171,6 +176,16 @@ export default {
       }).then((data) => {
         this.$set(this, "weather", data);
       });
+    },
+    async search () {
+      this.locations = []
+      const geocode = Utils.geoCoding
+      console.log(this.location)
+      const data = await geocode({
+        location: this.location,
+        apiKey: this.apiKey
+      })
+      this.locations = data
     },
 
     autoupdate() {
