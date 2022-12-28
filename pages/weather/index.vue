@@ -1,14 +1,22 @@
 <template>
 	<div class="vww__widget" :style="{ color: textColor }">
-		<form @submit.prevent="search">
-			<input v-model="location" type="text" placeholder="Enter location">
-			<button type="submit">Search</button>
-		</form>
-		<select v-if="locations.length > 0" v-model="selectedLocation">
-			<option v-for="location in locations" :key="location.id" :value="location">
-				{{ location.name }}
-			</option>
-		</select>
+		<template>
+			<div class="vww_location">
+				<form @submit.prevent="search" class="vww__form">
+
+					<input v-model="location" type="text" placeholder="Enter location" class="vww_input">
+					<button type="submit" class="vww_button">
+						<i class="fas fa-search"></i>
+					</button>
+				</form>
+				<section v-if="locations && (locations.length > 0)" class="results">
+					<select v-model="selectedLocation" class="vww__select">
+						<option v-for="location in locations" :key="location.id" :value="location">{{ location.name }}, {{ location.country }}</option>
+					</select>
+				</section>
+			</div>
+
+		</template>
 		<slot name="header">
 			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
 				<span class="vww__title">

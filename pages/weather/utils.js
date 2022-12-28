@@ -48,6 +48,7 @@ const utils = {
 
     const API_GEOCODING_ENDPOINT = 'https://api.openweathermap.org/geo/1.0/'
         try {
+          if(opts.location != ''){
           const { data } = await axios.get(`${API_GEOCODING_ENDPOINT}direct`, {
             params: {
               q: opts.location,
@@ -56,6 +57,7 @@ const utils = {
             }
           })
           return data
+        }
         } catch (error) {
           console.error(error)
         }

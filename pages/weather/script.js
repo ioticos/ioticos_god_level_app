@@ -3,6 +3,7 @@
  // https://github.com/dipu-bd/vue-weather-widget.git
 
 import Utils from "./utils";
+import { v4 as uuid } from 'uuid'
 import Skycon from "vue-skycons";
 
 export default {
@@ -19,18 +20,6 @@ export default {
     apiKey: {
       type: String,
       default: process.env.weather_api_key
-    },
-
-    latitude: {
-      type: String,
-      default: '-12.0431800'
-    },
-
-    // The longitude of a location (in decimal degrees).
-    // Positive is east, negative is west.
-    longitude: {
-      type: String,
-      default: '-77.0282400'
     },
 
     // Return summary properties in the desired language.
@@ -83,7 +72,18 @@ export default {
       timeout: null,
       location: null,
       locations: [],
-      searchTimeout: null
+      searchTimeout: null,
+      selectedLocation: null,
+      latitude: {
+        type: String,
+        default: '-12.0431800'
+      },
+      // The longitude of a location (in decimal degrees).
+      // Positive is east, negative is west.
+      longitude: {
+        type: String,
+        default: '-77.0282400'
+      },
     };
   },
 
@@ -91,6 +91,13 @@ export default {
     location: function (newValue) {
       clearTimeout(this.searchTimeout)
       this.searchTimeout = setTimeout(() => this.search(), 1000)
+    },
+    selectedLocation (location) {
+      this.location = location.name;
+      this.locations = [];
+      this.longitude = String(location.lon);
+      this.latitude = String(location.lat);
+
     },
     apiKey: "hydrate",
     latitude: "hydrate",
@@ -185,7 +192,11 @@ export default {
         location: this.location,
         apiKey: this.apiKey
       })
-      this.locations = data
+
+      this.locations = data.map(location => ({
+        id: uuid(),
+        ...location
+      }))
     },
 
     autoupdate() {
