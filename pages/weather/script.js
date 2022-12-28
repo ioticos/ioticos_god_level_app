@@ -1,10 +1,11 @@
- // A simple Widget create by Sudipto Chandra
- // Original Widget on
- // https://github.com/dipu-bd/vue-weather-widget.git
+// A simple Widget create by Sudipto Chandra
+// Original Widget on
+// https://github.com/dipu-bd/vue-weather-widget.git
 
 import Utils from "./utils";
-import { v4 as uuid } from 'uuid'
+import { v4 as uuid } from "uuid";
 import Skycon from "vue-skycons";
+import CitiesListItem from "./CitiesListItem";
 
 export default {
   middleware: "authenticated",
@@ -12,10 +13,10 @@ export default {
 
   components: {
     Skycon,
+    CitiesListItem
   },
 
   props: {
-
     // OpenWeatherMap secret key
     apiKey: {
       type: String,
@@ -25,43 +26,43 @@ export default {
     // Return summary properties in the desired language.
     language: {
       type: String,
-      default: "es",
+      default: "es"
     },
 
     // Return weather conditions in the requested units.
     units: {
       type: String,
-      default: "metric",
+      default: "metric"
     },
 
     // Controls whether to show or hide the title bar.
     hideHeader: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     // Auto update interval in milliseconds
     updateInterval: {
-      type: Number,
+      type: Number
     },
 
     // Use static skycons
     disableAnimation: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     // Color of the Temparature bar. Default: '#444'
     barColor: {
       type: String,
-      default: "#444",
+      default: "#444"
     },
 
     // Color of the text. Default: '#f4f5f7'
     textColor: {
       type: String,
-      default: "#f4f5f7",
-    },
+      default: "#f4f5f7"
+    }
   },
 
   data() {
@@ -73,38 +74,30 @@ export default {
       location: null,
       locations: [],
       searchTimeout: null,
-      selectedLocation: null,
       latitude: {
         type: String,
-        default: '-12.0431800'
+        default: "-12.0431800"
       },
       // The longitude of a location (in decimal degrees).
       // Positive is east, negative is west.
       longitude: {
         type: String,
-        default: '-77.0282400'
-      },
+        default: "-77.0282400"
+      }
     };
   },
 
   watch: {
-    location: function (newValue) {
-      clearTimeout(this.searchTimeout)
-      this.searchTimeout = setTimeout(() => this.search(), 1000)
-    },
-    selectedLocation (location) {
-      this.location = location.name;
-      this.locations = [];
-      this.longitude = String(location.lon);
-      this.latitude = String(location.lat);
-
+    location: function(newValue) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => this.search(), 1000);
     },
     apiKey: "hydrate",
     latitude: "hydrate",
     longitude: "hydrate",
     language: "hydrate",
     units: "hydrate",
-    updateInterval: "hydrate",
+    updateInterval: "hydrate"
   },
 
   mounted() {
@@ -157,9 +150,12 @@ export default {
         if (day.time <= today) {
           day.weekName = "Today";
         } else {
-          day.weekName = new Date(day.time * 1000).toLocaleDateString(this.language, {
-            weekday: "short",
-          });
+          day.weekName = new Date(day.time * 1000).toLocaleDateString(
+            this.language,
+            {
+              weekday: "short"
+            }
+          );
         }
         const max = day.temperatureMax;
         const min = day.temperatureMin;
@@ -168,10 +164,17 @@ export default {
         day.bottom = 100 - (day.top + day.height);
       }
       return forecasts;
-    },
+    }
   },
 
   methods: {
+    selectedLocation(location){
+      console.log('in');
+      this.location = location.name;
+      this.locations = [];
+      this.longitude = String(location.lon);
+      this.latitude = String(location.lat);
+    },
     loadWeather() {
       const fetchWeatherMethod = Utils.fetchOWMWeather;
       return fetchWeatherMethod({
@@ -179,24 +182,24 @@ export default {
         lat: this.latitude,
         lng: this.longitude,
         units: this.units,
-        language: this.language,
-      }).then((data) => {
+        language: this.language
+      }).then(data => {
         this.$set(this, "weather", data);
       });
     },
-    async search () {
-      this.locations = []
-      const geocode = Utils.geoCoding
-      console.log(this.location)
+    async search() {
+      this.locations = [];
+      const geocode = Utils.geoCoding;
+      console.log(this.location);
       const data = await geocode({
         location: this.location,
         apiKey: this.apiKey
-      })
+      });
 
       this.locations = data.map(location => ({
         id: uuid(),
         ...location
-      }))
+      }));
     },
 
     autoupdate() {
@@ -216,7 +219,7 @@ export default {
         .then(() => {
           this.$set(this, "error", null);
         })
-        .catch((err) => {
+        .catch(err => {
           this.$set(this, "error", "" + err);
         })
         .finally(() => {
@@ -229,6 +232,6 @@ export default {
       if (!this.latitude || !this.longitude) {
         throw new Error("VueWeatherWidget: Latitude or longitude is required");
       }
-    },
-  },
+    }
+  }
 };

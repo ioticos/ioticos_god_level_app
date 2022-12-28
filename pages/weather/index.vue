@@ -9,11 +9,21 @@
 						<i class="fas fa-search"></i>
 					</button>
 				</form>
-				<section v-if="locations && (locations.length > 0)" class="results">
-					<select v-model="selectedLocation" class="vww__select">
-						<option v-for="location in locations" :key="location.id" :value="location">{{ location.name }}, {{ location.country }}</option>
-					</select>
-				</section>
+				<template v-if="locations && locations.length">
+					<!-- finded items -->
+					<div class="ww-cities-list-search__items">
+						<transition-group type="transition" name="flip-list">
+							<template v-for="(location, index) in locations">
+								<CitiesListItem
+								@click="selectedLocation(location)"
+								:key="index"
+								class="ww-cities-list-search__item"
+								:forecast="location">
+								</CitiesListItem>
+							</template>
+						</transition-group>
+					</div>
+				</template>
 			</div>
 
 		</template>
