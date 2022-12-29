@@ -168,8 +168,18 @@ export default {
   },
 
   methods: {
+    sendValue() {
+      const toSend = {
+          topic: "weather"+"/actdata",
+          msg: {
+              value: this.weather.currently.weather
+          }
+        };
+          
+          console.log(toSend);
+          this.$nuxt.$emit('mqtt-sender', toSend);
+  },
     selectedLocation(location){
-      console.log('in');
       this.location = location.name;
       this.locations = [];
       this.longitude = String(location.lon);
@@ -216,6 +226,7 @@ export default {
       return this.$nextTick()
         .then(this.processLocation)
         .then(this.loadWeather)
+        .then(this.sendValue)
         .then(() => {
           this.$set(this, "error", null);
         })
