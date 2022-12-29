@@ -67,6 +67,7 @@ export default {
 
   data() {
     return {
+      isSearching: true,
       loading: true,
       weather: null,
       error: null,
@@ -226,6 +227,7 @@ export default {
       return this.$nextTick()
         .then(this.processLocation)
         .then(this.loadWeather)
+        .then(() => this.isSearching = false)
         .then(this.sendValue)
         .then(() => {
           this.$set(this, "error", null);

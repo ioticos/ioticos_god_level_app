@@ -25,7 +25,8 @@ export default {
 
 <style lang="scss">
 .ww-cities-list-item {
-    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
     align-items: center;
     background-color: white;
     border-radius: 0.5rem;

@@ -9,9 +9,50 @@
 
 .vww__header {
   position: relative;
+  display: flex;
+  justify-content: space-between;
   padding: 10px;
   border-bottom-style: solid;
   border-bottom-width: 2px;
+
+  .vww_button {
+    align-items: center;
+    border: none;
+    border-radius: 4px;
+    color: $gray-600;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    height: 36px;
+    justify-content: center;
+    padding: 0 16px;
+  }
+
+  .vww__form {
+    display: flex;
+    width: 40%;
+    height: 30px;
+    background-color: $white;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .vww_input {
+      border: none;
+      font: 400 0.8rem $font-family-base;
+      outline: none;
+      padding: 0.75rem;
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5rem;
+    }
+  }
+
+  &::placeholder {
+    color: $input-placeholder-color;
+    font: inherit;
+  }
 }
 
 .vww__title {
@@ -90,49 +131,6 @@
   display: none;
   height: 100%;
 }
-
-.vww__form {
-  display: flex;
-  width: 100%;
-  background-color: $white;
-  border: 1px solid;
-  border-radius: 0.25rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
-
-  .vww_input {
-    border: none;
-    font: 400 0.8rem $font-family-base;
-    outline: none;
-    padding: 0.75rem;
-    width: 100%;
-
-    &::placeholder {
-      color: $input-placeholder-color;
-      font: inherit;
-    }
-  }
-
-  .vww_button {
-    background-color: $white;
-    align-items: center;
-    border: none;
-    border-radius: 4px;
-    color: $gray-600;
-    cursor: pointer;
-    display: flex;
-    font-size: 16px;
-    height: 36px;
-    justify-content: center;
-    padding: 0 16px;
-    text-transform: uppercase;
-  }
-
-  .vww_input+.vww_button {
-    margin-left: 8px;
-  }
-}
-
 
 .vww__select {
   background-color: white;

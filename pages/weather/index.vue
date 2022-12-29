@@ -1,41 +1,36 @@
 <template>
 	<div class="vww__widget" :style="{ color: textColor }">
-		<template>
-			<div class="vww_location">
-				<form @submit.prevent="search" class="vww__form">
-
+		<slot name="header">
+			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
+				<span class="vww__title">
+					<slot name="title">Clima</slot>
+				</span>
+				<form @submit.prevent="search" class="vww__form" v-if="isSearching">
 					<input v-model="location" type="text" placeholder="Enter location" class="vww_input">
-					<button type="submit" class="vww_button">
-						<i class="fas fa-search"></i>
-					</button>
 				</form>
+				<button type="submit" class="vww_button" @click="isSearching = true" v-if="!isSearching">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</slot>
+		<template v-if="isSearching">
+			<div class="vww_location">
+
 				<template v-if="locations && locations.length">
 					<!-- finded items -->
 					<div class="ww-cities-list-search__items">
 						<transition-group type="transition" name="flip-list">
 							<template v-for="(location, index) in locations">
-								<CitiesListItem
-								@click="selectedLocation(location)"
-								:key="index"
-								class="ww-cities-list-search__item"
-								:forecast="location">
+								<CitiesListItem @click="selectedLocation(location)" :key="index"
+									class="ww-cities-list-search__item" :forecast="location">
 								</CitiesListItem>
 							</template>
 						</transition-group>
 					</div>
 				</template>
 			</div>
-
 		</template>
-		<slot name="header">
-			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
-				<span class="vww__title">
-					<slot name="title">Clima</slot>
-				</span>
-			</div>
-		</slot>
-
-		<div class="vww__content">
+		<div class="vww__content" v-if="!isSearching">
 			<div class="vww__loading" v-if="loading">
 				<slot name="loading">
 					<skycon condition="partly-cloudy-day" :color="textColor" :paused="disableAnimation" />
