@@ -5,6 +5,7 @@
   width: 100%;
   min-width: 250px;
   max-width: 800px;
+  height: 250px;
 }
 
 .vww__header {
@@ -60,14 +61,17 @@
   font-weight: bold;
   text-transform: capitalize;
 }
-
-.vww__content {
-  min-height: 150px;
+.vww_location {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
   height: 180px;
+}
+.vww__content {
+  height: 200px;
   display: flex;
   align-items: center;
   padding: 8px;
-  overflow: hidden;
 }
 
 .vww__loading {

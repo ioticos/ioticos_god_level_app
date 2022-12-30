@@ -6,6 +6,8 @@ import Utils from "./utils";
 import { v4 as uuid } from "uuid";
 import Skycon from "vue-skycons";
 import CitiesListItem from "./CitiesListItem";
+import PerfectScrollbar from "perfect-scrollbar";
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 export default {
   middleware: "authenticated",
@@ -75,16 +77,10 @@ export default {
       location: null,
       locations: [],
       searchTimeout: null,
-      latitude: {
-        type: String,
-        default: "-12.0431800"
-      },
       // The longitude of a location (in decimal degrees).
       // Positive is east, negative is west.
-      longitude: {
-        type: String,
-        default: "-77.0282400"
-      }
+      latitude: "-12.0431800",
+      longitude:"-77.0282400",
     };
   },
 
@@ -102,9 +98,12 @@ export default {
   },
 
   mounted() {
+    this.scrollbar = new PerfectScrollbar('.vww_location');
     this.hydrate();
   },
-
+  beforeDestroy () {
+    this.scrollbar.destroy()
+  },
   destroyed() {
     clearTimeout(this.timeout);
   },
@@ -167,41 +166,40 @@ export default {
       return forecasts;
     }
   },
-
   methods: {
     sendValue() {
       const toSend = {
-          topic: "weather"+"/actdata",
-          msg: {
-              value: this.weather.currently.weather
-          }
-        };
-          
-          console.log(toSend);
-          this.$nuxt.$emit('mqtt-sender', toSend);
-  },
-    selectedLocation(location){
+        topic: "weather" + "/actdata",
+        msg: {
+          value: this.weather.currently.weather
+        }
+      };
+
+      console.log(toSend);
+      this.$nuxt.$emit("mqtt-sender", toSend);
+    },
+    selectedLocation(location) {
       this.location = location.name;
       this.locations = [];
       this.longitude = String(location.lon);
       this.latitude = String(location.lat);
     },
-    loadWeather() {
+    async loadWeather() {
       const fetchWeatherMethod = Utils.fetchOWMWeather;
-      return fetchWeatherMethod({
+      const data = await fetchWeatherMethod({
         apiKey: this.apiKey,
         lat: this.latitude,
         lng: this.longitude,
         units: this.units,
         language: this.language
-      }).then(data => {
-        this.$set(this, "weather", data);
       });
+      this.$set(this, "weather", data);
     },
     async search() {
+      try{
+      this.loading = true
       this.locations = [];
       const geocode = Utils.geoCoding;
-      console.log(this.location);
       const data = await geocode({
         location: this.location,
         apiKey: this.apiKey
@@ -211,6 +209,11 @@ export default {
         id: uuid(),
         ...location
       }));
+      this.loading = false ;
+      }catch{
+
+      }
+      
     },
 
     autoupdate() {
@@ -227,7 +230,7 @@ export default {
       return this.$nextTick()
         .then(this.processLocation)
         .then(this.loadWeather)
-        .then(() => this.isSearching = false)
+        .then(() => (this.isSearching = false))
         .then(this.sendValue)
         .then(() => {
           this.$set(this, "error", null);
