@@ -1,9 +1,12 @@
 <template>
-	<div class="vww__widget" :style="{ color: textColor }">
+	<card class="vww__widget" :style="{ color: textColor }">
 		<slot name="header">
 			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
 				<span class="vww__title">
-					<slot name="title">Clima</slot>
+					<slot name="title">
+	
+						{{ config.selectedDevice.name }} - {{ config.variableFullName }} <i :class="[config.icon]" aria-hidden="true"></i>
+					</slot>
 				</span>
 				<form @submit.prevent="search" class="vww__form" v-if="isSearching">
 					<input v-model="location" type="text" placeholder="Enter location" class="vww_input">
@@ -14,20 +17,22 @@
 			</div>
 		</slot>
 		<template v-if="isSearching">
-			<div class="vww_location">
+			<div class="ww-cities-list">
+				<div class="vww_location">
 
-				<template v-if="locations && locations.length">
-					<!-- finded items -->
-					<div class="ww-cities-list-search__items">
-						<transition-group type="transition" name="flip-list">
-							<template v-for="(location, index) in locations">
-								<CitiesListItem @click="selectedLocation(location)" :key="index"
-									class="ww-cities-list-search__item" :forecast="location">
-								</CitiesListItem>
-							</template>
-						</transition-group>
-					</div>
-				</template>
+					<template v-if="locations && locations.length">
+						<!-- finded items -->
+						<div class="ww-cities-list-search__items">
+							<transition-group type="transition" name="flip-list">
+								<template v-for="(location, index) in locations">
+									<CitiesListItem @click="selectedLocation(location)" :key="index"
+										class="ww-cities-list-search__item" :forecast="location">
+									</CitiesListItem>
+								</template>
+							</transition-group>
+						</div>
+					</template>
+				</div>
 			</div>
 		</template>
 		<div class="vww__content" v-if="!isSearching">
@@ -101,7 +106,7 @@
 
 			</template>
 		</div>
-	</div>
+	</card>
 </template>
   
 <script src="./script.js"></script>

@@ -19,6 +19,9 @@ export default {
   },
 
   props: {
+    config: {
+      type: Object
+    },
     // OpenWeatherMap secret key
     apiKey: {
       type: String,
@@ -98,7 +101,7 @@ export default {
   },
 
   mounted() {
-    this.scrollbar = new PerfectScrollbar('.vww_location');
+    this.scrollbar = new PerfectScrollbar('.ww-cities-list');
     this.hydrate();
   },
   beforeDestroy () {

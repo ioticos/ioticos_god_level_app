@@ -44,6 +44,11 @@
                 value="button"
                 label="Button OUTPUT ->"
               ></el-option>
+              <el-option
+                class="text-dark"
+                value="weather"
+                label="Weather OUTPUT ->"
+              ></el-option>
             </el-select>
 
             <br />
@@ -529,6 +534,82 @@
 
               <br /><br />
             </div>
+
+            <!-- FORM weather TYPE -->
+            <div v-if="widgetType == 'weather'">
+              <base-input
+                v-model="iotWeatherConfig.variableFullName"
+                label="Var Name"
+                type="text"
+              >
+              </base-input>
+
+              <base-input
+                v-model="iotWeatherConfig.icon"
+                label="Icon"
+                type="text"
+              ></base-input>
+
+              <br />
+
+              <base-input
+                v-model="iotWeatherConfig.variableSendFreq"
+                label="Send Freq"
+                type="text"
+              ></base-input>
+
+              <br />
+
+              <el-select
+                v-model="iotWeatherConfig.class"
+                class="select-success"
+                placeholder="Select Class"
+                style="width: 100%;"
+              >
+                <el-option
+                  class="text-success"
+                  value="success"
+                  label="Success"
+                ></el-option>
+                <el-option
+                  class="text-primary"
+                  value="primary"
+                  label="Primary"
+                ></el-option>
+                <el-option
+                  class="text-warning"
+                  value="warning"
+                  label="Warning"
+                ></el-option>
+                <el-option
+                  class="text-danger"
+                  value="danger"
+                  label="Danger"
+                ></el-option>
+              </el-select>
+
+              <br /><br /><br />
+
+              <el-select
+                v-model="iotWeatherConfig.column"
+                class="select-success"
+                placeholder="Select Column Width"
+                style="width: 100%;"
+              >
+                <el-option
+                  class="text-dark"
+                  value="col-6"
+                  label="small"
+                ></el-option>
+                <el-option
+                  class="text-dark"
+                  value="col-10"
+                  label="large"
+                ></el-option>
+              </el-select>
+
+              <br /><br />
+            </div>
           </div>
 
           <!-- WIDGET PREVIEW -->
@@ -549,6 +630,10 @@
               v-if="widgetType == 'indicator'"
               :config="iotIndicatorConfig"
             ></Iotindicator>
+            <Weather
+            v-if="widgetType == 'weather'"
+            :config="iotWeatherConfig"
+            ></Weather>
           </div>
         </div>
 
@@ -602,6 +687,11 @@
           v-if="widget.widget == 'indicator'"
           :config="widget"
         ></Iotindicator>
+
+        <Weather
+            v-if="widget.widget == 'weather'"
+            :config="widget"
+        ></Weather>
       </div>
     </div>
 
@@ -764,6 +854,22 @@ export default {
         column: "col-6"
       },
 
+      
+      iotWeatherConfig: {
+        userId: "userid",
+        selectedDevice: {
+          name: "Home",
+          dId: "8888"
+        },
+        variableFullName: "Clima",
+        variable: "varname",
+        variableType: "output",
+        variableSendFreq: "30",
+        class: "danger",
+        widget: "weather",
+        icon: "fa-solid fa-cloud-sun",
+        column: "col-10"
+      },
 
       iotIndicatorConfig: {
         userId: "userid",
@@ -949,6 +1055,11 @@ export default {
       if (this.widgetType == "indicator") {
         this.iotIndicatorConfig.variable = this.makeid(10);
         this.widgets.push(JSON.parse(JSON.stringify(this.iotIndicatorConfig)));
+      }
+
+      if (this.widgetType == "weather") {
+        this.iotWeatherConfig.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.iotWeatherConfig)));
       }
 
     },
