@@ -40,17 +40,6 @@ export default {
       default: "metric"
     },
 
-    // Controls whether to show or hide the title bar.
-    hideHeader: {
-      type: Boolean,
-      default: false
-    },
-
-    // Auto update interval in milliseconds
-    updateInterval: {
-      type: Number
-    },
-
     // Use static skycons
     disableAnimation: {
       type: Boolean,
@@ -97,7 +86,7 @@ export default {
     longitude: "hydrate",
     language: "hydrate",
     units: "hydrate",
-    updateInterval: "hydrate"
+    config: {updateInterval: "hydrate"}
   },
 
   mounted() {
@@ -172,7 +161,7 @@ export default {
   methods: {
     sendValue() {
       const toSend = {
-        topic: "weather" + "/actdata",
+        topic: this.config.userId + '/' + this.config.selectedDevice.dId + '/' + this.config.variable + '/actdata',
         msg: {
           value: this.weather.currently.weather
         }
@@ -218,10 +207,10 @@ export default {
       }
       
     },
-
+    // Auto update interval in milliseconds
     autoupdate() {
       clearTimeout(this.timeout);
-      const time = Number(this.updateInterval);
+      const time = Number(this.config.updateInterval);
       if (!time || time < 10 || this.destroyed) {
         return;
       }

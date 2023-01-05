@@ -57,7 +57,7 @@
             <!-- FORMS NUMBER CHART TYPE -->
             <div v-if="widgetType == 'numberchart'">
               <base-input
-                v-model="ncConfig.variableFullName"
+                v-model="ncConfig.variableFullName "
                 label="Var Name"
                 type="text"
               >
@@ -299,28 +299,28 @@
             <!-- FORM BUTTON TYPE -->
             <div v-if="widgetType == 'button'">
               <base-input
-                v-model="configButton.variableFullName"
+                v-model="isEditing ? selectedWidget.variableFullName : configButton.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="configButton.message"
+                v-model="isEditing ? selectedWidget.message :configButton.message"
                 label="Message to send"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="configButton.text"
+                v-model="isEditing ? selectedWidget.text :configButton.text"
                 label="Button Text"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="configButton.icon"
+                v-model="isEditing ? selectedWidget.icon :configButton.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -328,7 +328,7 @@
               <br />
 
               <el-select
-                v-model="configButton.class"
+                v-model="isEditing ? selectedWidget.class :configButton.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -358,7 +358,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="configButton.column"
+                v-model="isEditing ? selectedWidget.column :configButton.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -553,8 +553,8 @@
               <br />
 
               <base-input
-                v-model="iotWeatherConfig.variableSendFreq"
-                label="Send Freq"
+                v-model="iotWeatherConfig.updateInterval"
+                label="Update Interval"
                 type="text"
               ></base-input>
 
@@ -662,9 +662,17 @@
         :class="[widget.column]"
       >
         <i
+          role="button"
           aria-hidden="true"
           class="fa fa-trash text-warning pull-right"
           @click="deleteWidget(index)"
+          style="margin-bottom: 10px;"
+        ></i>
+        <i
+          role="button"
+          aria-hidden="true"
+          class="fa fa-pen text-success mr-3 pull-right"
+          @click="editWidget(widget)"
           style="margin-bottom: 10px;"
         ></i>
 
@@ -812,13 +820,13 @@ export default {
   },
   data() {
     return {
+      selectedWidget: {},
+      isEditing: false,
       widgets: [],
       templates: [],
       widgetType: "",
       templateName: "",
       templateDescription: "",
-
-
       ncConfig: {
         userId: "sampleuserid",
         selectedDevice: {
@@ -853,8 +861,6 @@ export default {
         icon: "fa-bath",
         column: "col-6"
       },
-
-      
       iotWeatherConfig: {
         userId: "userid",
         selectedDevice: {
@@ -864,8 +870,8 @@ export default {
         variableFullName: "Clima",
         variable: "varname",
         variableType: "output",
-        variableSendFreq: "30",
         class: "danger",
+        updateInterval: "0",
         widget: "weather",
         icon: "fa-solid fa-cloud-sun",
         column: "col-10"
@@ -1068,6 +1074,12 @@ export default {
     deleteWidget(index) {
       this.widgets.splice(index, 1);
     },
+    editWidget(widget) {
+      this.widgetType = widget.widget;
+      this.selectedWidget = widget;
+      this.isEditing = true;
+    }
+    ,
 
     makeid(length) {
       var result = "";

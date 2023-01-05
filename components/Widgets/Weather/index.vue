@@ -1,11 +1,11 @@
 <template>
 	<card class="vww__widget" :style="{ color: textColor }">
 		<slot name="header">
-			<div class="vww__header" :style="{ borderColor: barColor }" v-if="!hideHeader">
+			<div class="vww__header" :style="{ borderColor: barColor }">
 				<span class="vww__title">
 					<slot name="title">
 	
-						{{ config.selectedDevice.name }} - {{ config.variableFullName }} <i :class="[config.icon]" aria-hidden="true"></i>
+						{{ config.selectedDevice.name }} - {{ config.variableFullName }} <i class="fa" :class="[config.icon]" aria-hidden="true"></i>
 					</slot>
 				</span>
 				<form @submit.prevent="search" class="vww__form" v-if="isSearching">
