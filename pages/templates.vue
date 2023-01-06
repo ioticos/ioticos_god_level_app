@@ -4,7 +4,7 @@
     <div class="row">
       <card>
         <div slot="header">
-          <h4 class="card-title">Widgets {{iotIndicatorConfig.column}}</h4>
+          <h4 class="card-title">Widgets {{configSelectedWidget.column}}</h4>
         </div>
 
         <div class="row">
@@ -57,24 +57,24 @@
             <!-- FORMS NUMBER CHART TYPE -->
             <div v-if="widgetType == 'numberchart'">
               <base-input
-                v-model="ncConfig.variableFullName "
+                v-model="configSelectedWidget.variableFullName "
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
-              <base-input v-model="ncConfig.unit" label="Unit" type="text">
+              <base-input v-model="configSelectedWidget.unit" label="Unit" type="text">
               </base-input>
 
               <base-input
-                v-model.number="ncConfig.decimalPlaces"
+                v-model.number="configSelectedWidget.decimalPlaces"
                 label="Decimal Places"
                 type="number"
               >
               </base-input>
 
               <base-input
-                v-model="ncConfig.icon"
+                v-model="configSelectedWidget.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -82,7 +82,7 @@
               <br />
 
               <base-input
-                v-model.number="ncConfig.variableSendFreq"
+                v-model.number="configSelectedWidget.variableSendFreq"
                 label="Send Freq"
                 type="number"
               ></base-input>
@@ -90,7 +90,7 @@
               <br />
 
               <base-input
-                v-model.number="ncConfig.chartTimeAgo"
+                v-model.number="configSelectedWidget.chartTimeAgo"
                 label="Chart Back Time (mins)"
                 type="number"
               ></base-input>
@@ -98,7 +98,7 @@
               <br />
 
               <el-select
-                v-model="ncConfig.class"
+                v-model="configSelectedWidget.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -128,7 +128,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="ncConfig.column"
+                v-model="configSelectedWidget.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -191,14 +191,14 @@
             <!-- FORM SWITCH TYPE -->
             <div v-if="widgetType == 'switch'">
               <base-input
-                v-model="iotSwitchConfig.variableFullName"
+                v-model="configSelectedWidget.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotSwitchConfig.icon"
+                v-model="configSelectedWidget.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -206,7 +206,7 @@
               <br />
 
               <el-select
-                v-model="iotSwitchConfig.class"
+                v-model="configSelectedWidget.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -236,7 +236,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="iotSwitchConfig.column"
+                v-model="configSelectedWidget.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -299,28 +299,28 @@
             <!-- FORM BUTTON TYPE -->
             <div v-if="widgetType == 'button'">
               <base-input
-                v-model="isEditing ? selectedWidget.variableFullName : configButton.variableFullName"
+                v-model="configSelectedWidget.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="isEditing ? selectedWidget.message :configButton.message"
+                v-model="configSelectedWidget.message"
                 label="Message to send"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="isEditing ? selectedWidget.text :configButton.text"
+                v-model="configSelectedWidget.text"
                 label="Button Text"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="isEditing ? selectedWidget.icon :configButton.icon"
+                v-model="configSelectedWidget.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -328,7 +328,7 @@
               <br />
 
               <el-select
-                v-model="isEditing ? selectedWidget.class :configButton.class"
+                v-model="configSelectedWidget.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -358,7 +358,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="isEditing ? selectedWidget.column :configButton.column"
+                v-model="configSelectedWidget.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -422,14 +422,14 @@
             <div v-if="widgetType == 'indicator'">
 
               <base-input
-                v-model="iotIndicatorConfig.variableFullName"
+                v-model="configSelectedWidget.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotIndicatorConfig.icon"
+                v-model="configSelectedWidget.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -437,7 +437,7 @@
               <br />
 
               <base-input
-                v-model="iotIndicatorConfig.variableSendFreq"
+                v-model="configSelectedWidget.variableSendFreq"
                 label="Send Freq"
                 type="text"
               ></base-input>
@@ -445,7 +445,7 @@
               <br />
 
               <el-select
-                v-model="iotIndicatorConfig.class"
+                v-model="configSelectedWidget.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -475,7 +475,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="iotIndicatorConfig.column"
+                v-model="configSelectedWidget.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -538,14 +538,14 @@
             <!-- FORM weather TYPE -->
             <div v-if="widgetType == 'weather'">
               <base-input
-                v-model="iotWeatherConfig.variableFullName"
+                v-model="configSelectedWidget.variableFullName"
                 label="Var Name"
                 type="text"
               >
               </base-input>
 
               <base-input
-                v-model="iotWeatherConfig.icon"
+                v-model="configSelectedWidget.icon"
                 label="Icon"
                 type="text"
               ></base-input>
@@ -553,7 +553,7 @@
               <br />
 
               <base-input
-                v-model="iotWeatherConfig.updateInterval"
+                v-model="configSelectedWidget.updateInterval"
                 label="Update Interval"
                 type="text"
               ></base-input>
@@ -561,7 +561,7 @@
               <br />
 
               <el-select
-                v-model="iotWeatherConfig.class"
+                v-model="configSelectedWidget.class"
                 class="select-success"
                 placeholder="Select Class"
                 style="width: 100%;"
@@ -591,7 +591,7 @@
               <br /><br /><br />
 
               <el-select
-                v-model="iotWeatherConfig.column"
+                v-model="configSelectedWidget.column"
                 class="select-success"
                 placeholder="Select Column Width"
                 style="width: 100%;"
@@ -616,23 +616,23 @@
           <div class="col-6">
             <Rtnumberchart
               v-if="widgetType == 'numberchart'"
-              :config="ncConfig"
+              :config="configSelectedWidget"
             ></Rtnumberchart>
             <Iotswitch
               v-if="widgetType == 'switch'"
-              :config="iotSwitchConfig"
+              :config="configSelectedWidget"
             ></Iotswitch>
             <Iotbutton
               v-if="widgetType == 'button'"
-              :config="configButton"
+              :config="configSelectedWidget"
             ></Iotbutton>
             <Iotindicator
               v-if="widgetType == 'indicator'"
-              :config="iotIndicatorConfig"
+              :config="configSelectedWidget"
             ></Iotindicator>
             <Weather
             v-if="widgetType == 'weather'"
-            :config="iotWeatherConfig"
+            :config="configSelectedWidget"
             ></Weather>
           </div>
         </div>
@@ -810,24 +810,29 @@
 import { Table, TableColumn } from "element-ui";
 import { Select, Option } from "element-ui";
 
-export default {
-  middleware: "authenticated",
-  components: {
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn,
-    [Option.name]: Option,
-    [Select.name]: Select
-  },
-  data() {
-    return {
-      selectedWidget: {},
-      isEditing: false,
-      widgets: [],
-      templates: [],
-      widgetType: "",
-      templateName: "",
-      templateDescription: "",
-      ncConfig: {
+
+// Enum with config of Widgets
+
+const configWidgets = {
+  button: {
+        userId: "userid",
+        selectedDevice: {
+          name: "Home",
+          dId: "8888",
+          templateName: "Power Sensor",
+          templateId: "984237562348756ldksjfh",
+          saverRule: false
+        },
+        variableFullName: "Pump",
+        variable: "var1",
+        variableType: "output",
+        icon: "fa-sun",
+        column: "col-4",
+        widget: "button",
+        class: "danger",
+        message: "{'fanstatus': 'stop'}"
+      },
+  numberchart: {
         userId: "sampleuserid",
         selectedDevice: {
           name: "Home",
@@ -846,8 +851,7 @@ export default {
         chartTimeAgo: 60,
         demo: true
       },
-
-      iotSwitchConfig: {
+  switch: {
         userId: "userid",
         selectedDevice: {
           name: "Home",
@@ -861,7 +865,7 @@ export default {
         icon: "fa-bath",
         column: "col-6"
       },
-      iotWeatherConfig: {
+  weather: {
         userId: "userid",
         selectedDevice: {
           name: "Home",
@@ -876,8 +880,7 @@ export default {
         icon: "fa-solid fa-cloud-sun",
         column: "col-10"
       },
-
-      iotIndicatorConfig: {
+  indicator: {
         userId: "userid",
         selectedDevice: {
           name: "Home",
@@ -891,35 +894,40 @@ export default {
         widget: "indicator",
         icon: "fa-bath",
         column: "col-6"
-      },
+      }
+}
 
-      configButton: {
-        userId: "userid",
-        selectedDevice: {
-          name: "Home",
-          dId: "8888",
-          templateName: "Power Sensor",
-          templateId: "984237562348756ldksjfh",
-          saverRule: false
-        },
-        variableFullName: "Pump",
-        variable: "var1",
-        variableType: "output",
-        icon: "fa-sun",
-        column: "col-4",
-        widget: "button",
-        class: "danger",
-        message: "{'fanstatus': 'stop'}"
-      },
-
-
+export default {
+  middleware: "authenticated",
+  components: {
+    [Table.name]: Table,
+    [TableColumn.name]: TableColumn,
+    [Option.name]: Option,
+    [Select.name]: Select
+  },
+  data() {
+    return {
+      configSelectedWidget: {},
+      isEditing: false,
+      widgets: [],
+      templates: [],
+      widgetType: "",
+      templateName: "",
+      templateDescription: "",
     };
   },
-
+  watch: {
+    widgetType(newValue){
+      try {
+        this.configSelectedWidget = JSON.parse(JSON.stringify(configWidgets[`${newValue}`]))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
   mounted() {
     this.getTemplates();
   },
-
   methods: {
     //Get Templates
     async getTemplates() {
@@ -991,8 +999,6 @@ export default {
 
     //Delete Template
     async deleteTemplate(template) {
-
-      
       const axiosHeaders = {
         headers: {
           token: this.$store.state.auth.token
@@ -1017,7 +1023,6 @@ export default {
             icon: "tim-icons icon-alert-circle-exc",
             message: template.name + " is in use. First remove the devices linked to the template!"
           });
-          
           return;
         }
 
@@ -1027,7 +1032,6 @@ export default {
             icon: "tim-icons icon-check-2",
             message: template.name + " was deleted!"
           });
-          
           this.getTemplates();
         }
       } catch (error) {
@@ -1040,32 +1044,31 @@ export default {
         return;
       }
     },
-
     //Add Widget
     addNewWidget() {
       if (this.widgetType == "numberchart") {
-        this.ncConfig.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.ncConfig)));
+        this.configSelectedWidget.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
       }
 
       if (this.widgetType == "switch") {
-        this.iotSwitchConfig.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.iotSwitchConfig)));
+        this.configSelectedWidget.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
       }
 
       if (this.widgetType == "button") {
-        this.configButton.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configButton)));
+        this.configSelectedWidget.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidgets)));
       }
 
       if (this.widgetType == "indicator") {
-        this.iotIndicatorConfig.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.iotIndicatorConfig)));
+        this.configSelectedWidget.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
       }
 
       if (this.widgetType == "weather") {
-        this.iotWeatherConfig.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.iotWeatherConfig)));
+        this.configSelectedWidget.variable = this.makeid(10);
+        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
       }
 
     },
@@ -1074,9 +1077,8 @@ export default {
     deleteWidget(index) {
       this.widgets.splice(index, 1);
     },
-    editWidget(widget) {
-      this.widgetType = widget.widget;
-      this.selectedWidget = widget;
+    editWidget(widget) {;
+      this.configSelectedWidget = widget;
       this.isEditing = true;
     }
     ,
