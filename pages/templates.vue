@@ -907,6 +907,7 @@ export default {
   },
   data() {
     return {
+      temporalWidgetConfig: null,
       configSelectedWidget: {},
       isEditing: false,
       widgets: [],
@@ -917,14 +918,20 @@ export default {
     };
   },
   watch: {
-    widgetType(newValue){
+    widgetType(newWidgetType){
       try {
-        this.configSelectedWidget = JSON.parse(JSON.stringify(configWidgets[`${newValue}`]))
+        if(!this.temporalWidgetConfig) {
+        this.configSelectedWidget = JSON.parse(JSON.stringify(configWidgets[`${newWidgetType}`]));
+      } else{
+          this.configSelectedWidget = this.temporalWidgetConfig;
+      }
+
+        this.temporalWidgetConfig = null;
       } catch (error) {
         console.log(error)
       }
     }
-  },
+    },
   mounted() {
     this.getTemplates();
   },
@@ -1046,40 +1053,17 @@ export default {
     },
     //Add Widget
     addNewWidget() {
-      if (this.widgetType == "numberchart") {
         this.configSelectedWidget.variable = this.makeid(10);
         this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
-      }
-
-      if (this.widgetType == "switch") {
-        this.configSelectedWidget.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
-      }
-
-      if (this.widgetType == "button") {
-        this.configSelectedWidget.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidgets)));
-      }
-
-      if (this.widgetType == "indicator") {
-        this.configSelectedWidget.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
-      }
-
-      if (this.widgetType == "weather") {
-        this.configSelectedWidget.variable = this.makeid(10);
-        this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
-      }
-
     },
 
     //Delete Widget
     deleteWidget(index) {
       this.widgets.splice(index, 1);
     },
-    editWidget(widget) {;
-      this.configSelectedWidget = widget;
-      this.isEditing = true;
+    editWidget(widget) {
+      this.temporalWidgetConfig = widget;
+      this.widgetType = widget.widget;
     }
     ,
 
