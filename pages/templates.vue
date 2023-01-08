@@ -641,6 +641,7 @@
         <div class="row pull-right">
           <div class="col-12">
             <base-button
+              v-if="!temporalWidgetConfig"
               native-type="submit"
               type="primary"
               class="mb-3"
@@ -648,6 +649,16 @@
               @click="addNewWidget()"
             >
               Add Widget
+            </base-button>
+            <base-button
+              v-if="temporalWidgetConfig"
+              native-type="submit"
+              type="primary"
+              class="mb-3"
+              size="lg"
+              @click="updateWidget()"
+            >
+              Update Widget
             </base-button>
           </div>
         </div>
@@ -666,14 +677,14 @@
           aria-hidden="true"
           class="fa fa-trash text-warning pull-right"
           @click="deleteWidget(index)"
-          style="margin-bottom: 10px;"
+          style="margin-bottom: 10px; cursor:pointer"
         ></i>
         <i
           role="button"
           aria-hidden="true"
           class="fa fa-pen text-success mr-3 pull-right"
-          @click="editWidget(widget)"
-          style="margin-bottom: 10px;"
+          @click="!temporalWidgetConfig ? editWidget(widget) : () => {}"
+          style="margin-bottom: 10px; cursor:pointer"
         ></i>
 
         <Rtnumberchart
@@ -922,13 +933,14 @@ export default {
       try {
         if(!this.temporalWidgetConfig) {
         this.configSelectedWidget = JSON.parse(JSON.stringify(configWidgets[`${newWidgetType}`]));
-      } else{
-          this.configSelectedWidget = this.temporalWidgetConfig;
       }
-
-        this.temporalWidgetConfig = null;
       } catch (error) {
         console.log(error)
+      }
+    },
+    temporalWidgetConfig(newWidgetConfig){
+      if(this.temporalWidgetConfig){
+        this.configSelectedWidget = newWidgetConfig;
       }
     }
     },
@@ -1055,6 +1067,13 @@ export default {
     addNewWidget() {
         this.configSelectedWidget.variable = this.makeid(10);
         this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
+    },
+
+    //update wiget
+
+    updateWidget(){
+      this.temporalWidgetConfig = null;
+      this.widgetType = ''
     },
 
     //Delete Widget
