@@ -791,6 +791,22 @@
                 class="text-right table-actions"
               >
                 <el-tooltip
+                  content="Edit"
+                  effect="light"
+                  :open-delay="300"
+                  placement="top"
+                >
+                  <base-button
+                    @click="editTemplate(row.widgets)"
+                    type="warning"
+                    icon
+                    size="sm"
+                    class="btn-link"
+                  >
+                    <i class="fa fa-pen"></i>
+                  </base-button>
+                </el-tooltip>
+                <el-tooltip
                   content="Delete"
                   effect="light"
                   :open-delay="300"
@@ -962,6 +978,7 @@ export default {
 
         if (res.data.status == "success") {
           this.templates = res.data.data;
+          console.log(res);
         }
       } catch (error) {
         this.$notify({
@@ -1063,28 +1080,34 @@ export default {
         return;
       }
     },
+    //Edit Template
+    async updateTemplate(){
+
+    },
+    editTemplate(template){
+      console.log(template);
+      this.widgets = template;
+    },
+
     //Add Widget
     addNewWidget() {
         this.configSelectedWidget.variable = this.makeid(10);
         this.widgets.push(JSON.parse(JSON.stringify(this.configSelectedWidget)));
     },
-
-    //update wiget
-
+    //edit Widget from local
+    editWidget(widget) {
+      this.temporalWidgetConfig = widget;
+      this.widgetType = widget.widget;
+    },
+    //Update wiget from local
     updateWidget(){
       this.temporalWidgetConfig = null;
       this.widgetType = ''
     },
-
     //Delete Widget
     deleteWidget(index) {
       this.widgets.splice(index, 1);
     },
-    editWidget(widget) {
-      this.temporalWidgetConfig = widget;
-      this.widgetType = widget.widget;
-    }
-    ,
 
     makeid(length) {
       var result = "";
