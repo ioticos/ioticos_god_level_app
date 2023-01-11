@@ -748,10 +748,10 @@
               type="primary"
               class="mb-3 pull-right"
               size="lg"
-              @click="saveTemplate()"
+              @click="isEditing? updateTemplate() :saveTemplate()   "
               :disabled="widgets.length == 0"
             >
-              Save Template
+              {{isEditing ? 'Edit Template' : 'Save Template' }}
             </base-button>
           </div>
         </div>
@@ -797,7 +797,7 @@
                   placement="top"
                 >
                   <base-button
-                    @click="editTemplate(row.widgets)"
+                    @click="editTemplate(row)"
                     type="warning"
                     icon
                     size="sm"
@@ -934,6 +934,7 @@ export default {
   },
   data() {
     return {
+      templateId: null,
       temporalWidgetConfig: null,
       configSelectedWidget: {},
       isEditing: false,
@@ -1081,12 +1082,51 @@ export default {
       }
     },
     //Edit Template
-    async updateTemplate(){
-
+    // Envía una solicitud PUT al backend para modificar un documento en la colección "Template"
+    async updateTemplate() {
+      const axiosHeaders = {
+        headers: {
+          token: this.$store.state.auth.token
+        },
+        params:{
+          templateId: this.templateId
+        }
+      };
+      const toSend = {
+          name: this.templateName,
+          description: this.templateDescription,
+          widgets: this.widget
+      };
+      try {
+        const res = await this.$axios.put("/template", toSend, axiosHeaders);
+        if (res.data.status == "success") {
+          this.$notify({
+            type: "success",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: "Template update!"
+          });
+          this.getTemplates();
+          this.widgets = [];
+          this.isEditing = false;
+        }
+      } catch (error) {
+        this.$notify({
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: "Error editing template..."
+        });
+        console.log(error);
+        return;
+      }
     },
     editTemplate(template){
       console.log(template);
-      this.widgets = template;
+      this.widgets = template.widgets;
+      this.templateDescription = template.description;
+      this.templateName = template.name;
+      this.templateId = template._id;
+      this.widgetType = '';
+      this.isEditing = true;
     },
 
     //Add Widget

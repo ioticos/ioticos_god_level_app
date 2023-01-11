@@ -13,9 +13,6 @@ router.get("/template", checkAuth, async (req, res) => {
 
     const templates = await Template.find({ userId: userId });
 
-    console.log(userId);
-    console.log(templates);
-
     const response = {
       status: "success",
       data: templates
@@ -108,6 +105,10 @@ router.put("/template", checkAuth, async (req, res) => {
     const userId = req.userData._id;
     const templateId = req.query.templateId;
     const update = req.body;
+
+    console.log(userId);
+    console.log(templateId);
+    console.log(update);
 
     // Utiliza el método "updateOne()" para modificar el documento
     const r = await Template.updateOne(
