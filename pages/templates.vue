@@ -672,11 +672,27 @@
         :key="index"
         :class="[widget.column]"
       >
-        <i
+      <i
           role="button"
           aria-hidden="true"
           class="fa fa-trash text-warning pull-right"
           @click="deleteWidget(index)"
+          style="margin-bottom: 10px; cursor:pointer"
+        ></i>
+        <i
+          v-if="index > 0"
+          role="button"
+          aria-hidden="true"
+          class="fa fa-angle-up text-primary mr-3 pull-right"
+          @click="moveWidget(index, 'up')"
+          style="margin-bottom: 10px; cursor:pointer"
+        ></i>
+        <i
+          v-if="index < widgets.length - 1"
+          role="button"
+          aria-hidden="true"
+          class="fa fa-angle-down text-primary mr-3 pull-right"
+          @click="moveWidget(index,'down')"
           style="margin-bottom: 10px; cursor:pointer"
         ></i>
         <i
@@ -1128,7 +1144,26 @@ export default {
       this.widgetType = '';
       this.isEditing = true;
     },
-
+    /**
+ * moveWidget - Move the widget from one position to another
+ *
+ * @param {number} index - The index of the widget to move
+ * @param {string} direction - The direction to move the widget: "up" or "down"
+ *
+ */
+    moveWidget(index, direction) {
+      if (direction === "up") {
+          if (index > 0) {
+            const [item] = this.widgets.splice(index, 1);
+            this.widgets.splice(index - 1, 0, item);
+          }
+      } else if (direction === "down") {
+          if (index < this.widgets.length - 1) {
+            const [item] = this.widgets.splice(index, 1);
+            this.widgets.splice(index + 1, 0, item);
+          }
+      }
+    },
     //Add Widget
     addNewWidget() {
         this.configSelectedWidget.variable = this.makeid(10);
