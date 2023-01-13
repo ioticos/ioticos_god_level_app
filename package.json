@@ -40,7 +40,8 @@
     "uuid": "^9.0.0",
     "vue-chartjs": "^3.4.0",
     "vue-skycons": "^4.1.1",
-    "vue2-transitions": "^0.2.3"
+    "vue2-transitions": "^0.2.3",
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

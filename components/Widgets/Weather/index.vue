@@ -4,7 +4,6 @@
 			<div class="vww__header" :style="{ borderColor: barColor }">
 				<span class="vww__title">
 					<slot name="title">
-	
 						{{ config.selectedDevice.name }} - {{ config.variableFullName }} <i class="fa" :class="[config.icon]" aria-hidden="true"></i>
 					</slot>
 				</span>
@@ -35,6 +34,14 @@
 				</div>
 			</div>
 		</template>
+		<div class="vww__content" v-if="isSearching">
+			<div class="vww__loading" v-if="loading">
+				<slot name="loading">
+					<skycon condition="partly-cloudy-day" :color="textColor" :paused="disableAnimation" />
+					<span class="vww__title">Cargando...</span>
+				</slot>
+			</div>
+		</div>
 		<div class="vww__content" v-if="!isSearching">
 			<div class="vww__loading" v-if="loading">
 				<slot name="loading">
@@ -90,10 +97,10 @@
 									<span>{{ Math.round(day.temperatureMax) }}&deg;</span>
 								</div>
 								<div :style="{
-	borderRadius: '10px',
-	background: barColor,
-	height: `${day.height}%`,
-}">
+										borderRadius: '10px',
+										background: barColor,
+										height: `${day.height}%`,
+									}">
 									&nbsp;
 								</div>
 								<div :style="{ height: `${day.bottom}%` }">

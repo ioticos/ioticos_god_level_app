@@ -666,7 +666,8 @@
     </div> 
 
     <!-- DASHBOARD PREVIEW -->
-    <div class="row">
+  <div class="row">
+    <draggable v-bind="draggableOptions" v-model="widgets" class="d-flex flex-wrap w-100 h-100">
       <div
         v-for="(widget, index) in widgets"
         :key="index"
@@ -728,7 +729,8 @@
             :config="widget"
         ></Weather>
       </div>
-    </div>
+    </draggable>
+  </div>
 
     <!-- SAVE TEMPLATE FORM-->
     <div class="row" >
@@ -850,6 +852,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import { Table, TableColumn } from "element-ui";
 import { Select, Option } from "element-ui";
 
@@ -946,7 +949,8 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn,
     [Option.name]: Option,
-    [Select.name]: Select
+    [Select.name]: Select,
+    draggable
   },
   data() {
     return {
@@ -959,6 +963,11 @@ export default {
       widgetType: "",
       templateName: "",
       templateDescription: "",
+      draggableOptions: {
+        group: 'widgets',
+        animation: 150,
+        direction: 'horizontal'
+      }
     };
   },
   watch: {
@@ -1111,7 +1120,7 @@ export default {
       const toSend = {
           name: this.templateName,
           description: this.templateDescription,
-          widgets: this.widget
+          widgets: this.widgets
       };
       try {
         const res = await this.$axios.put("/template", toSend, axiosHeaders);
@@ -1121,6 +1130,7 @@ export default {
             icon: "tim-icons icon-alert-circle-exc",
             message: "Template update!"
           });
+          this.$store.dispatch("getDevices");
           this.getTemplates();
           this.widgets = [];
           this.isEditing = false;
@@ -1145,12 +1155,12 @@ export default {
       this.isEditing = true;
     },
     /**
- * moveWidget - Move the widget from one position to another
- *
- * @param {number} index - The index of the widget to move
- * @param {string} direction - The direction to move the widget: "up" or "down"
- *
- */
+   * moveWidget - Move the widget from one position to another
+   *
+   * @param {number} index - The index of the widget to move
+   * @param {string} direction - The direction to move the widget: "up" or "down"
+   *
+   */
     moveWidget(index, direction) {
       if (direction === "up") {
           if (index > 0) {
