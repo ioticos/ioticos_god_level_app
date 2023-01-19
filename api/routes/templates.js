@@ -1,122 +1,136 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { checkAuth } = require('../middlewares/authentication.js');
+const { checkAuth } = require("../middlewares/authentication.js");
 
 //models import
-import Template from '../models/template.js';
-import Device from '../models/device.js';
+import Template from "../models/template.js";
+import Device from "../models/device.js";
 
 //get templates
-router.get('/template', checkAuth, async (req, res) => {
+router.get("/template", checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData._id;
 
-    try {
+    const templates = await Template.find({ userId: userId });
 
-        const userId = req.userData._id;
+    const response = {
+      status: "success",
+      data: templates
+    };
 
-        const templates = await Template.find({userId: userId});
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
 
-        console.log(userId);
-        console.log(templates)
+    const response = {
+      status: "error",
+      error: error
+    };
 
-        const response = {
-            status: "success",
-            data: templates
-        }
-
-        return res.json(response);
-
-    } catch (error) {
-
-        console.log(error);
-
-        const response = {
-            status: "error",
-            error: error
-        }
-
-        return res.status(500).json(response);
-
-    }
-
+    return res.status(500).json(response);
+  }
 });
 
 //create template
-router.post('/template', checkAuth, async (req, res) => {
+router.post("/template", checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData._id;
 
-    try {
+    var newTemplate = req.body.template;
 
-        const userId = req.userData._id;
+    newTemplate.userId = userId;
+    newTemplate.createdTime = Date.now();
 
-        var newTemplate = req.body.template;
+    const r = await Template.create(newTemplate);
 
-        newTemplate.userId = userId;
-        newTemplate.createdTime = Date.now();
+    const response = {
+      status: "success"
+    };
 
-        const r = await Template.create(newTemplate);
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
 
-        const response = {
-            status: "success",
-        }
+    const response = {
+      status: "error",
+      error: error
+    };
 
-        return res.json(response)
-
-    } catch (error) {
-
-        console.log(error);
-
-        const response = {
-            status: "error",
-            error: error
-        }
-
-        return res.status(500).json(response);
-
-    }
-
+    return res.status(500).json(response);
+  }
 });
 
 //delete template
-router.delete('/template', checkAuth, async (req, res) => {
+router.delete("/template", checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData._id;
+    const templateId = req.query.templateId;
 
-    try {
+    const devices = await Device.find({
+      userId: userId,
+      templateId: templateId
+    });
 
-        const userId = req.userData._id;
-        const templateId = req.query.templateId;
+    if (devices.length > 0) {
+      const response = {
+        status: "fail",
+        error: "template in use"
+      };
 
-        const devices = await Device.find({userId: userId, templateId: templateId });
-
-
-        if (devices.length > 0){
-
-            const response = {
-                status: "fail",
-                error: "template in use"
-            }
-    
-            return res.json(response);
-        }
-
-        const r = await Template.deleteOne({userId: userId, _id: templateId});
-
-        const response = {
-            status: "success",
-        }
-
-        return res.json(response)
-
-    } catch (error) {
-
-        console.log(error);
-
-        const response = {
-            status: "error",
-            error: error
-        }
-
-        return res.status(500).json(response);
-
+      return res.json(response);
     }
 
+    const r = await Template.deleteOne({ userId: userId, _id: templateId });
+
+    const response = {
+      status: "success"
+    };
+
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
+
+    const response = {
+      status: "error",
+      error: error
+    };
+
+    return res.status(500).json(response);
+  }
+});
+
+// Modifica un documento en la colección "Template"
+router.put("/template", checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData._id;
+    const templateId = req.query.templateId;
+    const update = req.body;
+
+    console.log(userId);
+    console.log(templateId);
+    console.log(update);
+
+    // Utiliza el método "updateOne()" para modificar el documento
+    const r = await Template.updateOne(
+      { userId: userId, _id: templateId },
+      update
+    );
+
+    const response = {
+      status: "success"
+    };
+
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
+
+    const response = {
+      status: "error",
+      error: error
+    };
+
+    return res.status(500).json(response);
+  }
 });
 
 module.exports = router;

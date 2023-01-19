@@ -173,8 +173,8 @@ export default {
 
       ruleCopy.status = !ruleCopy.status;
 
-      const toSend = { 
-        rule: ruleCopy 
+      const toSend = {
+        rule: ruleCopy
       };
 
       const axiosHeaders = {

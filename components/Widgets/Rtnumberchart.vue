@@ -1,7 +1,7 @@
 <template>
 
 
-    <card type="chart">
+    <card type="chart"> 
 
         <template slot="header">
 

@@ -1,0 +1,209 @@
+@import '../../../assets/sass/dashboard/custom/variables';
+
+.vww__widget {
+  width: 100%;
+  height: 300px;
+}
+
+.vww__header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+
+  .vww_button {
+    align-items: center;
+    border: none;
+    border-radius: 4px;
+    color: $gray-600;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    height: 36px;
+    justify-content: center;
+    padding: 0 16px;
+  }
+
+  .vww__form {
+    display: flex;
+    width: 40%;
+    height: 30px;
+    background-color: $white;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .vww_input {
+      border: none;
+      font: 400 0.8rem $font-family-base;
+      outline: none;
+      padding: 0.75rem;
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5rem;
+    }
+  }
+
+  &::placeholder {
+    color: $input-placeholder-color;
+    font: inherit;
+  }
+}
+
+.vww__title {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.ww-cities-list {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: 100%;
+  .vww_location {
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+}
+
+.vww__content {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.vww__loading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vww__loading span {
+  display: block;
+  margin-left: 10px;
+}
+
+.vww__error {
+  width: 100%;
+  text-align: center;
+}
+
+.vww__error span {
+  display: block;
+  padding: 10px;
+}
+
+.vww__currently {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vww__currently>div {
+  display: flex;
+  align-items: center;
+}
+
+.vww__currently .vww__title {
+  margin-top: 10px;
+}
+
+.vww__temp {
+  padding: 0 10px;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 0.65em;
+}
+
+.vww__temp>div {
+  display: block;
+  text-align: center;
+  padding-right: 10px;
+}
+
+.vww__wind {
+  font-size: 14px;
+}
+
+.vww__daily {
+  display: none;
+  height: 100%;
+}
+
+.vww__select {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  height: 36px;
+  padding: 8px;
+  width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+  .vww__currently {
+    width: 300px;
+  }
+
+  .vww__daily {
+    overflow-x: hidden;
+    display: block;
+    height: 100%;
+    width: calc(100% - 300px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.vww__day {
+  height: 100%;
+  text-align: start;
+  position: relative;
+  min-width: 50px;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+.vww__day>span {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.vww__day-bar {
+  margin-top: 20px;
+  width: 30px;
+  height: calc(100% - 100px);
+}
+
+.vww__day-bar div {
+  margin: 0 5px;
+  display: flex;
+}
+
+.vww__day-bar div:first-child {
+  align-items: flex-end;
+}
+
+.vww__day-bar div:last-child {
+  align-items: flex-start;
+}
+
+.vww__day-bar span {
+  display: block;
+  font-size: 12px;
+}
