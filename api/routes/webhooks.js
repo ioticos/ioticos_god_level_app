@@ -137,6 +137,8 @@ router.post("/alarm-webhook", async (req, res) => {
       console.log("FIRST TIME ALARM");
       saveNotifToMongo(incomingAlarm);
       sendMqttNotif(incomingAlarm);
+      const res = await axios.get("https://api.telegram.org/botapiKey/sendMessage?chat_id=userId&text=" + "message");
+
     } else {
       const lastNotifToNowMins = (Date.now() - lastNotif[0].time) / 1000 / 60;
 
@@ -144,6 +146,7 @@ router.post("/alarm-webhook", async (req, res) => {
         console.log("TRIGGERED");
         saveNotifToMongo(incomingAlarm);
         sendMqttNotif(incomingAlarm);
+        const res = await axios.get("https://api.telegram.org/botapiKey/sendMessage?chat_id=userId&text=" + "message");
       }
     }
   } catch (error) {
