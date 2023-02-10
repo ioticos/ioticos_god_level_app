@@ -143,10 +143,13 @@ router.post("/alarm-webhook", async (req, res) => {
       console.log("FIRST TIME ALARM");
       saveNotifToMongo(incomingAlarm);
       sendMqttNotif(incomingAlarm);
+      
       const tel = await telegramApi.get("/sendMessage",
         {
-          chat_id: 1636679461,
-          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload}`
+          params: {
+          chat_id: incomingAlarm.telegramID,
+          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
+        }
         }
       );
 
@@ -156,11 +159,13 @@ router.post("/alarm-webhook", async (req, res) => {
 
 
       if (lastNotifToNowSeg > incomingAlarm.triggerTime) {
+        
         const tel = await telegramApi.get("/sendMessage",
         {
-          chat_id: 1636679461,
-          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload}`
-        }
+          params: {
+          chat_id: incomingAlarm.telegramID,
+          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
+        }}
       );
       }
 

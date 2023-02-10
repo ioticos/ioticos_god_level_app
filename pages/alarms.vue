@@ -47,7 +47,7 @@
               </el-select>
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
               <base-input
                 label="Value"
                 v-model="newRule.value"
@@ -55,10 +55,17 @@
               ></base-input>
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
               <base-input
                 label="Trigger Time"
                 v-model="newRule.triggerTime"
+                type="number"
+              ></base-input>
+            </div>
+            <div class="col-2">
+              <base-input
+                label="Telegram ID"
+                v-model="newRule.telegramID"
                 type="number"
               ></base-input>
             </div>
@@ -200,7 +207,8 @@ export default {
         variable: null,
         value: null,
         condition: null,
-        triggerTime: null
+        triggerTime: null,
+        telegramID:  null
       }
     };
   },
@@ -327,6 +335,7 @@ export default {
       this.newRule.variable = this.$store.state.selectedDevice.template.widgets[
         this.selectedWidgetIndex
       ].variable;
+      if(this.newRule.telegramID == null) this.newRule.telegramID = '000000';
 
       
 
