@@ -357,6 +357,7 @@ export default {
             this.newRule.condition = null;
             this.newRule.value = null;
             this.newRule.triggerTime = null;
+            this.newRule.telegramID = null;
             this.selectedWidgetIndex = null;
 
             this.$notify({
