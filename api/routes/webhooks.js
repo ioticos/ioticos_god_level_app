@@ -14,6 +14,12 @@ import Template from "../models/template.js";
 
 var client;
 
+const telegramApi = axios.create(
+  {
+    baseURL: `https://api.telegram.org/bot${process.env.TELEGRAM_API_KEY}`
+  }
+)
+
 //******************
 //**** A P I *******
 //******************
@@ -137,8 +143,32 @@ router.post("/alarm-webhook", async (req, res) => {
       console.log("FIRST TIME ALARM");
       saveNotifToMongo(incomingAlarm);
       sendMqttNotif(incomingAlarm);
+      
+      const tel = await telegramApi.get("/sendMessage",
+        {
+          params: {
+          chat_id: incomingAlarm.telegramID,
+          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
+        }
+        }
+      );
+
     } else {
       const lastNotifToNowMins = (Date.now() - lastNotif[0].time) / 1000 / 60;
+      const lastNotifToNowSeg = (Date.now() - lastNotif[0].time) / 1000;
+
+
+      if (lastNotifToNowSeg > incomingAlarm.triggerTime) {
+        
+        const tel = await telegramApi.get("/sendMessage",
+        {
+          params: {
+          chat_id: incomingAlarm.telegramID,
+          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
+        }}
+      );
+      }
+
 
       if (lastNotifToNowMins > incomingAlarm.triggerTime) {
         console.log("TRIGGERED");
