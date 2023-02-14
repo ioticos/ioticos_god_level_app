@@ -11,7 +11,7 @@
           </div>
 
           <div class="row">
-            <div class="col-3">
+            <div :class="checked ? 'col-2' : 'col-3'">
               <el-select
                 required
                 class="select-success"
@@ -30,7 +30,7 @@
               </el-select>
             </div>
 
-            <div class="col-3">
+            <div :class="checked ? 'col-2' : 'col-3'">
               <el-select
                 required
                 class="select-warning"
@@ -62,12 +62,25 @@
                 type="number"
               ></base-input>
             </div>
-            <div class="col-2">
+            <div v-if="checked" class="col-2">
               <base-input
                 label="Telegram ID"
                 v-model="newRule.telegramID"
                 type="number"
               ></base-input>
+            </div>
+            <div class="col-2 d-flex align-items-right flex-column has-label">
+              <label>Telegram</label>
+              <base-switch
+                @click="checked = !checked;"
+                :value="checked"
+                type="primary"
+                on-text="ON"
+                off-text="OFF"
+                style="margin-top: 10px;"
+                class="pull-center"
+                >
+              </base-switch>
             </div>
           </div>
 
@@ -197,6 +210,7 @@ export default {
   },
   data() {
     return {
+      checked: false,
       alarmRules: [],
       selectedWidgetIndex: null,
       newRule: {
