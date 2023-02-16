@@ -96,6 +96,51 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// update User
+
+router.put("/register", checkAuth, async (req, res) => {
+  try {
+    const userId = req.userData._id;
+    const telegramId = req.body.telegramId;
+    const email = req.body.email;
+
+    const userUpdate = {};
+
+    if (email) {
+      userUpdate.email = email;
+    }
+
+    if (telegramId) {
+      userUpdate.telegramId = telegramId;
+    }
+
+    const filter = { _id: userId };
+    const update = { $set: userUpdate };
+
+    var result = await User.updateOne(filter, update);
+
+    const response = {
+      status: "success",
+      result: result
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log("ERROR - UPDATE USER ENDPOINT");
+    console.log(error);
+
+    const response = {
+      status: "error",
+      error: error
+    };
+
+    console.log(response);
+
+    return res.status(500).json(response);
+  }
+});
+
+
 //GET MQTT WEB CREDENTIALS
 router.post("/getmqttcredentials", checkAuth, async (req, res) => {
   try {
