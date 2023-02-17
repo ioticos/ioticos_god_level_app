@@ -8,11 +8,11 @@
       <div class="block block-four"></div>
       <a href="javascript:void(0)">
         <img class="avatar" src="img/emilyz.jpg" alt="Porfile photo" />
-        <h5 class="title">Mike Andrew</h5>
+        <h5 class="title">{{ this.$store.state.auth.userData.name }}</h5>
       </a>
-      <p class="description">Company Name</p>
+      <p class="description">{{this.$store.state.auth.userData.company}}</p>
       <p>
-        example@example.com
+        {{ this.$store.state.auth.userData.email }}
       </p>
     </div>
   </card>

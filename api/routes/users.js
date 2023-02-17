@@ -98,11 +98,12 @@ router.post("/register", async (req, res) => {
 
 // update User
 
-router.put("/register", checkAuth, async (req, res) => {
+router.put("/user", checkAuth, async (req, res) => {
   try {
     const userId = req.userData._id;
     const telegramId = req.body.telegramId;
     const email = req.body.email;
+    console.log(req.userData);
 
     const userUpdate = {};
 
@@ -111,17 +112,24 @@ router.put("/register", checkAuth, async (req, res) => {
     }
 
     if (telegramId) {
-      userUpdate.telegramId = telegramId;
+      if (telegramId && telegramId.length > 10) {
+        return res.status(400).json({ message: 'Telegram ID must be less than 10 characters.' });
+      }
+      userUpdate.telegramID = telegramId;
     }
+    console.log(userUpdate);
 
     const filter = { _id: userId };
-    const update = { $set: userUpdate };
 
-    var result = await User.updateOne(filter, update);
+    var result = await User.updateOne(filter, userUpdate);
+
+    var user = await User.findOne(filter);
+
 
     const response = {
       status: "success",
-      result: result
+      userData: user,
+      message: "User Update"
     };
 
     res.status(200).json(response);
@@ -131,7 +139,8 @@ router.put("/register", checkAuth, async (req, res) => {
 
     const response = {
       status: "error",
-      error: error
+      error: error,
+      message: error.message
     };
 
     console.log(response);

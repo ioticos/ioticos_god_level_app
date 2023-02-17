@@ -7,7 +7,7 @@
           <base-input
             type="text"
             label="Company name"
-            placeholder="Company name"
+            placeholder="Your Company"
             v-model="user.company"
           >
           </base-input>
@@ -16,7 +16,7 @@
           <base-input
             type="text"
             label="User Name"
-            placeholder="User Name"
+            placeholder="User name"
             v-model="user.username"
           >
           </base-input>
@@ -36,9 +36,11 @@
         <div class="col-md-12">
           <base-input
             type="number"
-            label="Telegram id"
+            label="Telegram ID"
             placeholder="Telegram ID"
             v-model="user.telegramId"
+            @input="handleTelegramIdInput"
+            max="9999999999"
           >
           </base-input>
         </div>
@@ -56,44 +58,61 @@ export default {
   data() {
     return {
       user: {
-        company: 'Ioticos',
-        username: 'michael23',
+        company: null,
+        username: null,
         email: null,
-        firstName: 'Xavier',
-        lastName: '',
-        telegramId: ''
+        firstName: null,
+        lastName: null,
+        telegramId: null
       }
     };
   },
   methods: {
-    updateProfile() {
-      alert('Your data: ' + JSON.stringify(this.user));
+
+    handleTelegramIdInput() {
+      if (this.user.telegramId.length > 10) {
+        this.user.telegramId = this.user.telegramId.slice(0, 10);
+      }
     },
     // Envía una solicitud PUT al backend para modificar un documento en la colección "User"
-    async updateTemplate() {
+    async updateProfile() {
       const axiosHeaders = {
         headers: {
           token: this.$store.state.auth.token
         }
       };
       const toSend = {
-          email: this.email,
-          telegramId: this.telegramId
+          email: this.user.email,
+          telegramId: this.user.telegramId
       };
+
+      console.log(toSend);
+
       try {
         const res = await this.$axios.put("/user", toSend, axiosHeaders);
         if (res.data.status == "success") {
           this.$notify({
             type: "success",
             icon: "tim-icons icon-alert-circle-exc",
-            message: "Template update!"
+            message: res.data.message
           });
+
+          const auth = {
+              token: this.$store.state.auth.token,
+              userData: res.data.userData
+            }
+
+            //token to de store - token a la tienda
+            this.$store.commit('setAuth', auth);
+
+            //set auth object in localStorage - Grabamos el token en localStorage
+            localStorage.setItem('auth', JSON.stringify(auth));
         }
       } catch (error) {
         this.$notify({
           type: "danger",
           icon: "tim-icons icon-alert-circle-exc",
-          message: "Error editing template..."
+          message: 'Error to update user'
         });
         console.log(error);
         return;
