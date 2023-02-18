@@ -11,7 +11,7 @@
           </div>
 
           <div class="row">
-            <div :class="checked ? 'col-2' : 'col-3'">
+            <div class="col-3">
               <el-select
                 required
                 class="select-success"
@@ -30,7 +30,7 @@
               </el-select>
             </div>
 
-            <div :class="checked ? 'col-2' : 'col-3'">
+            <div class="col-3">
               <el-select
                 required
                 class="select-warning"
@@ -62,13 +62,6 @@
                 type="number"
               ></base-input>
             </div>
-            <div v-if="checked" class="col-2">
-              <base-input
-                label="Telegram ID"
-                v-model="newRule.telegramID"
-                type="number"
-              ></base-input>
-            </div>
             <div class="col-2 d-flex align-items-right flex-column has-label">
               <label>Telegram</label>
               <base-switch
@@ -82,22 +75,49 @@
                 >
               </base-switch>
             </div>
+            <div v-if="checked" class="col-6">
+              <base-input
+                label="Trigger Time telegram"
+                v-model="newRule.triggerTimeTelegram"
+                type="number"
+                placeholder="Seconds"
+              ></base-input>
+            </div>
+            <div v-if="checked" class="col-6">
+              <base-input
+                label="Telegram ID"
+                v-model="newRule.telegramID"
+                type="number"
+                @input="handleTelegramIdInput"
+              ></base-input>
+            </div>
           </div>
 
           <br /><br />
 
-          <div class="row pull-right">
-            <div class="col-12">
+          <div class="row">
+            <div class="col-12 d-flex justify-content-between">
+              <base-button
+                native-type="submit"
+                type="link"
+                class="mb-3"
+                size="lg"
+                :disabled="$store.state.devices.length == 0"
+              >
+                How i add my telegram?
+              </base-button>
+
               <base-button
                 @click="createNewRule()"
                 native-type="submit"
                 type="primary"
                 class="mb-3"
                 size="lg"
-                :disabled="$store.state.devices.length == 0"
+                :disabled="$store.state.devices.length == 0 || isButtonEnabled"
               >
-                Add Alarm Rule
+                {{  !isButtonEnabled ? "Add Alarm Rule" : "Creating..."}}
               </base-button>
+
             </div>
           </div>
         </card>
@@ -210,6 +230,7 @@ export default {
   },
   data() {
     return {
+      isButtonEnabled: false,
       checked: false,
       alarmRules: [],
       selectedWidgetIndex: null,
@@ -222,11 +243,17 @@ export default {
         value: null,
         condition: null,
         triggerTime: null,
-        telegramID:  null
+        triggerTimeTelegram: null,
+        telegramID:  this.$store.state.auth.userData.telegramID
       }
     };
   },
   methods: {
+    handleTelegramIdInput() {
+      if (this.newRule.telegramID.length > 10) {
+        this.newRule.telegramId = this.user.telegramId.slice(0, 10);
+      }
+    },
 
 
     deleteDevice(rule) {
@@ -243,7 +270,7 @@ export default {
       this.$axios
         .delete("/alarm-rule", axiosHeaders)
         .then(res => {
-           if (res.data.status == "success") {
+          if (res.data.status == "success") {
             this.$notify({
               type: "success",
               icon: "tim-icons icon-check-2",
@@ -304,12 +331,14 @@ export default {
     },
 
     createNewRule() {
+      this.isButtonEnabled = true;
       if (this.selectedWidgetIndex == null) {
         this.$notify({
           type: "warning",
           icon: "tim-icons icon-alert-circle-exc",
           message: " Variable must be selected"
         });
+        this.isButtonEnabled = false
         return;
       }
 
@@ -319,6 +348,7 @@ export default {
           icon: "tim-icons icon-alert-circle-exc",
           message: " Condition must be selected"
         });
+        this.isButtonEnabled = false
         return;
       }
 
@@ -328,6 +358,7 @@ export default {
           icon: "tim-icons icon-alert-circle-exc",
           message: " Value is empty"
         });
+        this.isButtonEnabled = false
         return;
       }
 
@@ -337,10 +368,28 @@ export default {
           icon: "tim-icons icon-alert-circle-exc",
           message: " Trigger Time is empty"
         });
+        this.isButtonEnabled = false
+        return;
+      }
+      if (this.newRule.triggerTimeTelegram == null && this.checked) {
+        this.$notify({
+          type: "warning",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: " Trigger Time Telegram is empty"
+        });
+        this.isButtonEnabled = false
+        return;
+      }
+      if (this.newRule.telegramID == null && this.checked) {
+        this.$notify({
+          type: "warning",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: "Telegram is empty"
+        });
+        this.isButtonEnabled = false
         return;
       }
 
-      
       this.newRule.dId = this.$store.state.selectedDevice.dId;
       this.newRule.deviceName = this.$store.state.selectedDevice.name;
       this.newRule.variableFullName = this.$store.state.selectedDevice.template.widgets[
@@ -349,9 +398,9 @@ export default {
       this.newRule.variable = this.$store.state.selectedDevice.template.widgets[
         this.selectedWidgetIndex
       ].variable;
-      if(this.newRule.telegramID == null) this.newRule.telegramID = '000000';
+      if(this.newRule.telegramID == null || !this.checked ) delete this.newRule.telegramID;
+      if(this.newRule.triggerTimeTelegram == null || !this.checked ) delete this.newRule.triggerTimeTelegram;
 
-      
 
       const axiosHeaders = {
         headers: {
@@ -371,9 +420,11 @@ export default {
             this.newRule.condition = null;
             this.newRule.value = null;
             this.newRule.triggerTime = null;
-            this.newRule.telegramID = null;
+            this.newRule.triggerTimeTelegram = null;
+            this.newRule.telegramID = this.$store.state.auth.userData.telegramID;
             this.selectedWidgetIndex = null;
-
+            this.triggerTimeTelegram = null;
+            
             this.$notify({
               type: "success",
               icon: "tim-icons icon-check-2",
@@ -384,7 +435,11 @@ export default {
 
             return;
           }
-        })
+        }).then(
+            setTimeout(() => {
+              this.isButtonEnabled = false;
+            }, 1500)
+        )
         .catch(e => {
           this.$notify({
             type: "danger",
