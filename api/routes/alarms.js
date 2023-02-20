@@ -159,6 +159,7 @@ async function createAlarmRule(newAlarm) {
         value: newAlarm.value,
         condition: newAlarm.condition,
         triggerTime: newAlarm.triggerTime,
+        triggerTimeTelegram: newAlarm.triggerTimeTelegram,
         createTime: Date.now(),
         telegramID: newAlarm.telegramID
       });
@@ -184,8 +185,8 @@ async function createAlarmRule(newAlarm) {
         newAlarm.variableFullName +
         '","triggerTime":' +
         newAlarm.triggerTime +
-        `${(newAlarm.telegramID == '000000') ?
-          "}": `, "telegramID": ${newAlarm.telegramID} }`}`;
+        `${(!newAlarm.telegramID) ? "": `, "telegramID": ${newAlarm.telegramID}`}` +
+        `${(!newAlarm.triggerTimeTelegram) ? "}": `, "triggerTimeTelegram": ${newAlarm.triggerTimeTelegram} }`}`;
 
       newRule.actions[0].params.payload_tmpl = payload_templ;
 

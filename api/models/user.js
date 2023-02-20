@@ -6,11 +6,13 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   name: { type: String, required: [true] },
   email: { type: String, required: [true], unique: true},
-  password: {  type: String, required: [true]},
+  password: { type: String, required: [true]},
+  telegramID: { type: String, maxlength: 10 }
 });
 
 
-//Validator
+//Validators
+
 userSchema.plugin(uniqueValidator, { message: 'Error, email already exists.'});
 
 

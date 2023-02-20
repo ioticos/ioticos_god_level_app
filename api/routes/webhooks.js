@@ -143,34 +143,21 @@ router.post("/alarm-webhook", async (req, res) => {
       console.log("FIRST TIME ALARM");
       saveNotifToMongo(incomingAlarm);
       sendMqttNotif(incomingAlarm);
-      
-      const tel = await telegramApi.get("/sendMessage",
-        {
-          params: {
-          chat_id: incomingAlarm.telegramID,
-          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
-        }
-        }
-      );
+
+    if (incomingAlarm.telegramID) {
+      sendMessage(incomingAlarm);
+    }
 
     } else {
-      const lastNotifToNowMins = (Date.now() - lastNotif[0].time) / 1000 / 60;
       const lastNotifToNowSeg = (Date.now() - lastNotif[0].time) / 1000;
 
-
-      if (lastNotifToNowSeg > incomingAlarm.triggerTime) {
-        
-        const tel = await telegramApi.get("/sendMessage",
-        {
-          params: {
-          chat_id: incomingAlarm.telegramID,
-          text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
-        }}
-      );
+      if (incomingAlarm.telegramID) {
+        if (lastNotifToNowSeg > incomingAlarm.triggerTimeTelegram) {
+          sendMessage(incomingAlarm);
+        }
       }
 
-
-      if (lastNotifToNowMins > incomingAlarm.triggerTime) {
+      if ((lastNotifToNowSeg / 60) > incomingAlarm.triggerTime) {
         console.log("TRIGGERED");
         saveNotifToMongo(incomingAlarm);
         sendMqttNotif(incomingAlarm);
@@ -242,6 +229,15 @@ router.put("/notifications", checkAuth, async (req, res) => {
 //**** FUNCTIONS *******
 //**********************
 
+async function sendMessage(incomingAlarm) {
+  const tel = await telegramApi.get("/sendMessage",
+    {
+        params: {
+        chat_id: incomingAlarm.telegramID,
+        text: `${incomingAlarm.variableFullName} ${incomingAlarm.condition} ${incomingAlarm.value} valor actual: ${incomingAlarm.payload.value}`
+      }
+    })
+}
 async function getDeviceMqttCredentials(dId, userId) {
   try {
     var rule = await EmqxAuthRule.find({
