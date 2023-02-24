@@ -83,7 +83,7 @@
           <p @click="logOut()" class="d-lg-none">Log out</p>
         </template>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Profile</a>
+          <nuxt-link to="/user" class="nav-item dropdown-item">Profile</nuxt-link>
         </li>
         <li class="nav-link">
           <a href="#" class="nav-item dropdown-item">Settings</a>

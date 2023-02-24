@@ -159,7 +159,9 @@ async function createAlarmRule(newAlarm) {
         value: newAlarm.value,
         condition: newAlarm.condition,
         triggerTime: newAlarm.triggerTime,
-        createTime: Date.now()
+        triggerTimeTelegram: newAlarm.triggerTimeTelegram,
+        createTime: Date.now(),
+        telegramID: newAlarm.telegramID
       });
 
       const url = "http://"+process.env.EMQX_API_HOST+":8085/api/v4/rules/" + mongoRule.emqxRuleId;
@@ -183,7 +185,8 @@ async function createAlarmRule(newAlarm) {
         newAlarm.variableFullName +
         '","triggerTime":' +
         newAlarm.triggerTime +
-        "}";
+        `${(!newAlarm.telegramID) ? "": `, "telegramID": ${newAlarm.telegramID}`}` +
+        `${(!newAlarm.triggerTimeTelegram) ? "}": `, "triggerTimeTelegram": ${newAlarm.triggerTimeTelegram} }`}`;
 
       newRule.actions[0].params.payload_tmpl = payload_templ;
 

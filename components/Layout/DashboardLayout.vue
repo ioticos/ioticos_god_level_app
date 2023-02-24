@@ -249,6 +249,7 @@ export default {
         initScrollbar('sidebar');
         initScrollbar('main-panel');
         initScrollbar('sidebar-wrapper');
+        initScrollbar('vww_location');
 
         docClasses.add('perfect-scrollbar-on');
       } else {

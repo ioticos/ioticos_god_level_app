@@ -30,6 +30,11 @@
         v-if="widget.widget == 'indicator'"
         :config="fixWidget(widget)"
       ></Iotindicator>
+
+      <Weather
+        v-if="widget.widget == 'weather'"
+        :config="fixWidget(widget)"
+      ></Weather>
     </div>
   </div>
 

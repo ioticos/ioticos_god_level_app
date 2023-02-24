@@ -13,7 +13,9 @@ const alarmRuleSchema = new Schema({
     triggerTime: { type: Number },
     status:  { type: Boolean },
     counter: { type: Number, default: 0},
-    createdTime: {type: Number}
+    createdTime: {type: Number},
+    telegramID: {type: Number},
+    triggerTimeTelegram: {type: Number},
 });
 
 
